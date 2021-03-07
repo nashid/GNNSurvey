@@ -6,3 +6,4 @@
 *.fdb_latexmk
 *.bbl
 *.blg
+.DS_Store
