@@ -472,3 +472,392 @@
   year={2019},
   organization={PMLR}
 }
+
+
+@techreport{allamanis2017learning,
+author = {Allamanis, Miltos and Brockschmidt, Marc and Khademi, Mahmoud},
+title = {Learning to Represent Programs with Graphs},
+year = {2017},
+month = {November},
+url = {https://www.microsoft.com/en-us/research/publication/learning-represent-programs-graphs/},
+number = {MSR-TR-2017-44},
+}
+
+@article{10.1109/TNN.2008.2005605, author = {Scarselli, Franco and Gori, Marco and Tsoi, Ah Chung and Hagenbuchner, Markus and Monfardini, Gabriele}, title = {The Graph Neural Network Model}, year = {2009}, issue_date = {January 2009}, publisher = {IEEE Press}, volume = {20}, number = {1}, issn = {1045-9227}, url = {https://doi.org/10.1109/TNN.2008.2005605}, doi = {10.1109/TNN.2008.2005605}, abstract = {Many underlying relationships among data in several areas of science and engineering, e.g., computer vision, molecular chemistry, molecular biology, pattern recognition, and data mining, can be represented in terms of graphs. In this paper, we propose a new neural network model, called graph neural network (GNN) model, that extends existing neural network methods for processing the data represented in graph domains. This GNN model, which can directly process most of the practically useful types of graphs, e.g., acyclic, cyclic, directed, and undirected, implements a function τ(G, n) ∈IRm that maps a graph G and one of its nodes n into an m-dimensional Euclidean space. A supervised learning algorithm is derived to estimate the parameters of the proposed GNN model. The computational cost of the proposed algorithm is also considered. Some experimental results are shown to validate the proposed learning algorithm, and to demonstrate its generalization capabilities.}, journal = {Trans. Neur. Netw.}, month = jan, pages = {61–80}, numpages = {20}, keywords = {graph processing, graphical domains, recursive neural networks, Graphical domains, graph neural networks (GNNs)} }
+
+
+@InProceedings{10.1007/3-540-44802-0_1,
+author="O'Hearn, Peter
+and Reynolds, John
+and Yang, Hongseok",
+editor="Fribourg, Laurent",
+title="Local Reasoning about Programs that Alter Data Structures",
+booktitle="Computer Science Logic",
+year="2001",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="1--19",
+abstract="We describe an extension of Hoare's logic for reasoning about programs that alter data structures. We consider a low-level storage model based on a heap with associated lookup, update, allocation and deallocation operations, and unrestricted address arithmetic. The assertion language is based on a possible worlds model of the logic of bunched implications, and includes spatial conjunction and implication connectives alongside those of classical logic. Heap operations are axiomatized using what we call the ``small axioms'', each of which mentions only those cells accessed by a particular command. Through these and a number of examples we show that the formalism supports local reasoning: A specification and proof can concentrate on only those cells in memory that a program accesses.",
+isbn="978-3-540-44802-0"
+}
+
+
+@article{10.1145/1925844.1926423,
+author = {Gulwani, Sumit},
+title = {Automating String Processing in Spreadsheets Using Input-Output Examples},
+year = {2011},
+issue_date = {January 2011},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {46},
+number = {1},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/1925844.1926423},
+doi = {10.1145/1925844.1926423},
+abstract = {We describe the design of a string programming/expression language that supports restricted forms of regular expressions, conditionals and loops. The language is expressive enough to represent a wide variety of string manipulation tasks that end-users struggle with. We describe an algorithm based on several novel concepts for synthesizing a desired program in this language from input-output examples. The synthesis algorithm is very efficient taking a fraction of a second for various benchmark examples. The synthesis algorithm is interactive and has several desirable features: it can rank multiple solutions and has fast convergence, it can detect noise in the user input, and it supports an active interaction model wherein the user is prompted to provide outputs on inputs that may have multiple computational interpretations.The algorithm has been implemented as an interactive add-in for Microsoft Excel spreadsheet system. The prototype tool has met the golden test - it has synthesized part of itself, and has been used to solve problems beyond author's imagination.},
+journal = {SIGPLAN Not.},
+month = jan,
+pages = {317–330},
+numpages = {14},
+keywords = {program synthesis, string manipulation, version space algebra, programming by example (pbe), user intent, spreadsheet programming}
+}
+
+@inproceedings{Gulwani2011,
+author = {Gulwani, Sumit},
+title = {Automating String Processing in Spreadsheets Using Input-Output Examples},
+year = {2011},
+isbn = {9781450304900},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/1926385.1926423},
+doi = {10.1145/1926385.1926423},
+abstract = {We describe the design of a string programming/expression language that supports restricted forms of regular expressions, conditionals and loops. The language is expressive enough to represent a wide variety of string manipulation tasks that end-users struggle with. We describe an algorithm based on several novel concepts for synthesizing a desired program in this language from input-output examples. The synthesis algorithm is very efficient taking a fraction of a second for various benchmark examples. The synthesis algorithm is interactive and has several desirable features: it can rank multiple solutions and has fast convergence, it can detect noise in the user input, and it supports an active interaction model wherein the user is prompted to provide outputs on inputs that may have multiple computational interpretations.The algorithm has been implemented as an interactive add-in for Microsoft Excel spreadsheet system. The prototype tool has met the golden test - it has synthesized part of itself, and has been used to solve problems beyond author's imagination.},
+booktitle = {Proceedings of the 38th Annual ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages},
+pages = {317–330},
+numpages = {14},
+keywords = {spreadsheet programming, programming by example (pbe), program synthesis, version space algebra, user intent, string manipulation},
+location = {Austin, Texas, USA},
+series = {POPL '11}
+}
+
+@InProceedings{parisotto2017neuro-symbolic,
+author = {Parisotto, Emilio and Mohamed, Abdelrahman and Singh, Rishabh and Li, Lihong and Zhou, Denny and Kohli, Pushmeet},
+title = {Neuro-Symbolic Program Synthesis},
+booktitle = {5th International Conference on Learning Representations (ICLR 2017)},
+year = {2017},
+month = {February},
+abstract = {Recent years have seen the proposal of a number of neural architectures for the problem of Program Induction. Given a set of input-output examples, these architectures are able to learn mappings that generalize to new test inputs. While achieving impressive results, these approaches have a number of important limitations: (a) they are computationally expensive and hard to train, (b) a model has to be trained for each task (program) separately, and (c) it is hard to interpret or verify the correctness of the learnt mapping (as it is defined by a neural network). In this paper, we propose a novel technique, Neuro-Symbolic Program Synthesis, to overcome the above-mentioned problems. Once trained, our approach can automatically construct computer programs in a domain-specific language that are consistent with a set of input-output examples provided at test time. Our method is based on two novel neural modules. The first module, called the cross correlation I/O network, given a set of input-output examples, produces a continuous representation of the set of I/O examples. The second module, the RecursiveReverse-Recursive Neural Network (R3NN), given the continuous representation of the examples, synthesizes a program by incrementally expanding partial programs. We demonstrate the effectiveness of our approach by applying it to the rich and complex domain of regular expression based string transformations. Experiments show that the R3NN model is not only able to construct programs from new input-output examples, but it is also able to construct new programs for tasks that it had never observed before during training.},
+url = {https://www.microsoft.com/en-us/research/publication/neuro-symbolic-program-synthesis-2/},
+edition = {5th International Conference on Learning Representations (ICLR 2017)},
+}
+
+
+@inproceedings{10.1145/3192366.3192382,
+author = {Feng, Yu and Martins, Ruben and Bastani, Osbert and Dillig, Isil},
+title = {Program Synthesis Using Conflict-Driven Learning},
+year = {2018},
+isbn = {9781450356985},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3192366.3192382},
+doi = {10.1145/3192366.3192382},
+abstract = {We propose a new conflict-driven program synthesis technique that is capable of learning from past mistakes. Given a spurious program that violates the desired specification, our synthesis algorithm identifies the root cause of the conflict and learns new lemmas that can prevent similar mistakes in the future. Specifically, we introduce the notion of equivalence modulo conflict and show how this idea can be used to learn useful lemmas that allow the synthesizer to prune large parts of the search space. We have implemented a general-purpose CDCL-style program synthesizer called Neo and evaluate it in two different application domains, namely data wrangling in R and functional programming over lists. Our experiments demonstrate the substantial benefits of conflict-driven learning and show that Neo outperforms two state-of-the-art synthesis tools, Morpheus and Deepcoder, that target these respective domains.},
+booktitle = {Proceedings of the 39th ACM SIGPLAN Conference on Programming Language Design and Implementation},
+pages = {420–435},
+numpages = {16},
+keywords = {automated reasoning, program synthesis, conflict-driven learning},
+location = {Philadelphia, PA, USA},
+series = {PLDI 2018}
+}
+
+@article{Feng2018,
+author = {Feng, Yu and Martins, Ruben and Bastani, Osbert and Dillig, Isil},
+title = {Program Synthesis Using Conflict-Driven Learning},
+year = {2018},
+issue_date = {April 2018},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {53},
+number = {4},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/3296979.3192382},
+doi = {10.1145/3296979.3192382},
+abstract = {We propose a new conflict-driven program synthesis technique that is capable of learning from past mistakes. Given a spurious program that violates the desired specification, our synthesis algorithm identifies the root cause of the conflict and learns new lemmas that can prevent similar mistakes in the future. Specifically, we introduce the notion of equivalence modulo conflict and show how this idea can be used to learn useful lemmas that allow the synthesizer to prune large parts of the search space. We have implemented a general-purpose CDCL-style program synthesizer called Neo and evaluate it in two different application domains, namely data wrangling in R and functional programming over lists. Our experiments demonstrate the substantial benefits of conflict-driven learning and show that Neo outperforms two state-of-the-art synthesis tools, Morpheus and Deepcoder, that target these respective domains.},
+journal = {SIGPLAN Not.},
+month = jun,
+pages = {420–435},
+numpages = {16},
+keywords = {automated reasoning, conflict-driven learning, program synthesis}
+}
+
+@ARTICLE{Micheli2009,
+  author={A. {Micheli}},
+  journal={IEEE Transactions on Neural Networks}, 
+  title={Neural Network for Graphs: A Contextual Constructive Approach}, 
+  year={2009},
+  volume={20},
+  number={3},
+  pages={498-511},
+  doi={10.1109/TNN.2008.2010350}}
+
+@misc{vinyals2017pointer,
+      title={Pointer Networks}, 
+      author={Oriol Vinyals and Meire Fortunato and Navdeep Jaitly},
+      year={2017},
+      eprint={1506.03134},
+      archivePrefix={arXiv},
+      primaryClass={stat.ML}
+}
+
+@misc{bahdanau2016neural,
+      title={Neural Machine Translation by Jointly Learning to Align and Translate}, 
+      author={Dzmitry Bahdanau and Kyunghyun Cho and Yoshua Bengio},
+      year={2016},
+      eprint={1409.0473},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+
+@misc{kumar2016ask,
+      title={Ask Me Anything: Dynamic Memory Networks for Natural Language Processing}, 
+      author={Ankit Kumar and Ozan Irsoy and Peter Ondruska and Mohit Iyyer and James Bradbury and Ishaan Gulrajani and Victor Zhong and Romain Paulus and Richard Socher},
+      year={2016},
+      eprint={1506.07285},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+
+@misc{sukhbaatar2015endtoend,
+      title={End-To-End Memory Networks}, 
+      author={Sainbayar Sukhbaatar and Arthur Szlam and Jason Weston and Rob Fergus},
+      year={2015},
+      eprint={1503.08895},
+      archivePrefix={arXiv},
+      primaryClass={cs.NE}
+}
+
+@misc{dai2018learning,
+      title={Learning Combinatorial Optimization Algorithms over Graphs}, 
+      author={Hanjun Dai and Elias B. Khalil and Yuyu Zhang and Bistra Dilkina and Le Song},
+      year={2018},
+      eprint={1704.01665},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+
+@inproceedings{
+kool2018attention,
+title={Attention, Learn to Solve Routing Problems!},
+author={Wouter Kool and Herke van Hoof and Max Welling},
+booktitle={International Conference on Learning Representations},
+year={2019},
+url={https://openreview.net/forum?id=ByxBFsRqYm},
+}
+
+@inproceedings{10.1145/2908080.2908102,
+author = {Smith, Calvin and Albarghouthi, Aws},
+title = {MapReduce Program Synthesis},
+year = {2016},
+isbn = {9781450342612},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2908080.2908102},
+doi = {10.1145/2908080.2908102},
+abstract = { By abstracting away the complexity of distributed systems, large-scale data processing platforms—MapReduce, Hadoop, Spark, Dryad, etc.—have provided developers with simple means for harnessing the power of the cloud. In this paper, we ask whether we can automatically synthesize MapReduce-style distributed programs from input–output examples. Our ultimate goal is to enable end users to specify large-scale data analyses through the simple interface of examples. We thus present a new algorithm and tool for synthesizing programs composed of efficient data-parallel operations that can execute on cloud computing infrastructure. We evaluate our tool on a range of real-world big-data analysis tasks and general computations. Our results demonstrate the efficiency of our approach and the small number of examples it requires to synthesize correct, scalable programs. },
+booktitle = {Proceedings of the 37th ACM SIGPLAN Conference on Programming Language Design and Implementation},
+pages = {326–340},
+numpages = {15},
+keywords = {data analysis, verification, program synthesis},
+location = {Santa Barbara, CA, USA},
+series = {PLDI '16}
+}
+
+@article{Smith2016,
+author = {Smith, Calvin and Albarghouthi, Aws},
+title = {MapReduce Program Synthesis},
+year = {2016},
+issue_date = {June 2016},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {51},
+number = {6},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/2980983.2908102},
+doi = {10.1145/2980983.2908102},
+abstract = { By abstracting away the complexity of distributed systems, large-scale data processing platforms—MapReduce, Hadoop, Spark, Dryad, etc.—have provided developers with simple means for harnessing the power of the cloud. In this paper, we ask whether we can automatically synthesize MapReduce-style distributed programs from input–output examples. Our ultimate goal is to enable end users to specify large-scale data analyses through the simple interface of examples. We thus present a new algorithm and tool for synthesizing programs composed of efficient data-parallel operations that can execute on cloud computing infrastructure. We evaluate our tool on a range of real-world big-data analysis tasks and general computations. Our results demonstrate the efficiency of our approach and the small number of examples it requires to synthesize correct, scalable programs. },
+journal = {SIGPLAN Not.},
+month = jun,
+pages = {326–340},
+numpages = {15},
+keywords = {data analysis, verification, program synthesis}
+}
+
+@INPROCEEDINGS{Rolim2017,  author={R. {Rolim} and G. {Soares} and L. {D'Antoni} and O. {Polozov} and S. {Gulwani} and R. {Gheyi} and R. {Suzuki} and B. {Hartmann}},  booktitle={2017 IEEE/ACM 39th International Conference on Software Engineering (ICSE)},   title={Learning Syntactic Program Transformations from Examples},   year={2017},  volume={},  number={},  pages={404-415},  doi={10.1109/ICSE.2017.44}}
+
+
+@article{Yaghmazadeh2017,
+author = {Yaghmazadeh, Navid and Wang, Yuepeng and Dillig, Isil and Dillig, Thomas},
+title = {SQLizer: Query Synthesis from Natural Language},
+year = {2017},
+issue_date = {October 2017},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {1},
+number = {OOPSLA},
+url = {https://doi.org/10.1145/3133887},
+doi = {10.1145/3133887},
+abstract = { This paper presents a new technique for automatically synthesizing SQL queries from natural language (NL). At the core of our technique is a new NL-based program synthesis methodology that combines semantic parsing techniques from the NLP community with type-directed program synthesis and automated program repair. Starting with a program sketch obtained using standard parsing techniques, our approach involves an iterative refinement loop that alternates between probabilistic type inhabitation and automated sketch repair. We use the proposed idea to build an end-to-end system called SQLIZER that can synthesize SQL queries from natural language. Our method is fully automated, works for any database without requiring additional customization, and does not require users to know the underlying database schema. We evaluate our approach on over 450 natural language queries concerning three different databases, namely MAS, IMDB, and YELP. Our experiments show that the desired query is ranked within the top 5 candidates in close to 90% of the cases and that SQLIZER outperforms NALIR, a state-of-the-art tool that won a best paper award at VLDB'14. },
+journal = {Proc. ACM Program. Lang.},
+month = oct,
+articleno = {63},
+numpages = {26},
+keywords = {Relational Databases, Program Synthesis, Programming by Natural Languages}
+}
+
+@inproceedings{Jha2010,
+author = {Jha, Susmit and Gulwani, Sumit and Seshia, Sanjit A. and Tiwari, Ashish},
+title = {Oracle-Guided Component-Based Program Synthesis},
+year = {2010},
+isbn = {9781605587196},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/1806799.1806833},
+doi = {10.1145/1806799.1806833},
+abstract = {We present a novel approach to automatic synthesis of loop-free programs. The approach is based on a combination of oracle-guided learning from examples, and constraint-based synthesis from components using satisfiability modulo theories (SMT) solvers. Our approach is suitable for many applications, including as an aid to program understanding tasks such as deobfuscating malware. We demonstrate the efficiency and effectiveness of our approach by synthesizing bit-manipulating programs and by deobfuscating programs.},
+booktitle = {Proceedings of the 32nd ACM/IEEE International Conference on Software Engineering - Volume 1},
+pages = {215–224},
+numpages = {10},
+keywords = {SAT, SMT, oracle-based learning, program synthesis},
+location = {Cape Town, South Africa},
+series = {ICSE '10}
+}
+
+@phdthesis{SolarLezama2008,
+    Author = {Solar Lezama, Armando},
+    Title = {Program Synthesis By Sketching},
+    School = {EECS Department, University of California, Berkeley},
+    Year = {2008},
+    Month = {Dec},
+    URL = {http://www2.eecs.berkeley.edu/Pubs/TechRpts/2008/EECS-2008-177.html},
+    Number = {UCB/EECS-2008-177}}
+
+@INPROCEEDINGS{Alur2013,  author={R. {Alur} and R. {Bodik} and G. {Juniwal} and M. M. K. {Martin} and M. {Raghothaman} and S. A. {Seshia} and R. {Singh} and A. {Solar-Lezama} and E. {Torlak} and A. {Udupa}},  booktitle={2013 Formal Methods in Computer-Aided Design},   title={Syntax-guided synthesis},   year={2013},  volume={},  number={},  pages={1-8},  doi={10.1109/FMCAD.2013.6679385}}
+
+@misc{allamanis2018survey,
+      title={A Survey of Machine Learning for Big Code and Naturalness}, 
+      author={Miltiadis Allamanis and Earl T. Barr and Premkumar Devanbu and Charles Sutton},
+      year={2018},
+      eprint={1709.06182},
+      archivePrefix={arXiv},
+      primaryClass={cs.SE}
+}
+
+@article{hindle2016CACM,
+ accepted = {2015-05-18},
+ author = {Abram Hindle and Earl T. Barr and Zhendong Su and Premkumar T. Devanbu and and Mark Gabel},
+ authors = {Abram Hindle, Earl T. Barr, Zhendong Su, Premkumar T. Devanbu, and Mark Gabel},
+ code = {hindle2016CACM},
+ funding = {NSF 0964703 and NSF 0613949},
+ issue = {59(5)},
+ journal = {Communications of the ACM: Invited Research Hilights (CACM)},
+ notes = {Invited re-print, not peer reviewed},
+ pagerange = {122--131},
+ pages = {122--131},
+ role = { Researcher / co-author},
+ title = {On the Naturalness of Software},
+ type = {article},
+ url = {http://softwareprocess.ca/pubs/hindle2016CACM.pdf},
+ venue = {Communications of the ACM: Invited Research Hilights (CACM)},
+ year = {2016}
+}
+
+@inproceedings{Maddison2014,
+author = {Maddison, Chris J. and Tarlow, Daniel},
+title = {Structured Generative Models of Natural Source Code},
+year = {2014},
+publisher = {JMLR.org},
+abstract = {We study the problem of building generative models of natural source code (NSC); that is, source code written by humans and meant to be understood by humans. Our primary contribution is to describe new generative models that are tailored to NSC. The models are based on probabilistic context free grammars (PCFGs) and neuro-probabilistic language models (Mnih &amp; Teh, 2012), which are extended to incorporate additional source code-specific structure. These models can be efficiently trained on a corpus of source code and outperform a variety of less structured baselines in terms of predictive log likelihoods on held-out data.},
+booktitle = {Proceedings of the 31st International Conference on International Conference on Machine Learning - Volume 32},
+pages = {II–649–II–657},
+location = {Beijing, China},
+series = {ICML'14}
+}
+
+@misc{balog2017deepcoder,
+      title={DeepCoder: Learning to Write Programs}, 
+      author={Matej Balog and Alexander L. Gaunt and Marc Brockschmidt and Sebastian Nowozin and Daniel Tarlow},
+      year={2017},
+      eprint={1611.01989},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+
+@misc{murali2018neural,
+      title={Neural Sketch Learning for Conditional Program Generation}, 
+      author={Vijayaraghavan Murali and Letao Qi and Swarat Chaudhuri and Chris Jermaine},
+      year={2018},
+      eprint={1703.05698},
+      archivePrefix={arXiv},
+      primaryClass={cs.PL}
+}
+
+@InProceedings{pmlr-v70-devlin17a, title = {{R}obust{F}ill: Neural Program Learning under Noisy {I}/{O}}, author = {Jacob Devlin and Jonathan Uesato and Surya Bhupatiraju and Rishabh Singh and Abdel-rahman Mohamed and Pushmeet Kohli}, booktitle = {Proceedings of the 34th International Conference on Machine Learning}, pages = {990--998}, year = {2017}, editor = {Doina Precup and Yee Whye Teh}, volume = {70}, series = {Proceedings of Machine Learning Research}, address = {International Convention Centre, Sydney, Australia}, month = {06--11 Aug}, publisher = {PMLR}, pdf = {http://proceedings.mlr.press/v70/devlin17a/devlin17a.pdf}, url = {http://proceedings.mlr.press/v70/devlin17a.html}, abstract = {The problem of automatically generating a computer program from some specification has been studied since the early days of AI. Recently, two competing approaches for `automatic program learning’ have received significant attention: (1) `neural program synthesis’, where a neural network is conditioned on input/output (I/O) examples and learns to generate a program, and (2) `neural program induction’, where a neural network generates new outputs directly using a latent program representation. Here, for the first time, we directly compare both approaches on a large-scale, real-world learning task and we additionally contrast to rule-based program synthesis, which uses hand-crafted semantics to guide the program generation. Our neural models use a modified attention RNN to allow encoding of variable-sized sets of I/O pairs, which achieve 92\% accuracy on a real-world test set, compared to the 34\% accuracy of the previous best neural synthesis approach. The synthesis model also outperforms a comparable induction model on this task, but we more importantly demonstrate that the strength of each approach is highly dependent on the evaluation metric and end-user application. Finally, we show that we can train our neural models to remain very robust to the type of noise expected in real-world data (e.g., typos), while a highly-engineered rule-based system fails entirely.} }
+
+@misc{bosnjak2017programming,
+      title={Programming with a Differentiable Forth Interpreter}, 
+      author={Matko Bošnjak and Tim Rocktäschel and Jason Naradowsky and Sebastian Riedel},
+      year={2017},
+      eprint={1605.06640},
+      archivePrefix={arXiv},
+      primaryClass={cs.NE}
+}
+
+@misc{bunel2018leveraging,
+      title={Leveraging Grammar and Reinforcement Learning for Neural Program Synthesis}, 
+      author={Rudy Bunel and Matthew Hausknecht and Jacob Devlin and Rishabh Singh and Pushmeet Kohli},
+      year={2018},
+      eprint={1805.04276},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+
+@misc{kalyan2018neuralguided,
+      title={Neural-Guided Deductive Search for Real-Time Program Synthesis from Examples}, 
+      author={Ashwin Kalyan and Abhishek Mohta and Oleksandr Polozov and Dhruv Batra and Prateek Jain and Sumit Gulwani},
+      year={2018},
+      eprint={1804.01186},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI}
+}
+
+@misc{chen2018synthesizing,
+      title={Towards Synthesizing Complex Programs from Input-Output Examples}, 
+      author={Xinyun Chen and Chang Liu and Dawn Song},
+      year={2018},
+      eprint={1706.01284},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+
+@inproceedings{Si2018,
+author = {Si, Xujie and Dai, Hanjun and Raghothaman, Mukund and Naik, Mayur and Song, Le},
+title = {Learning Loop Invariants for Program Verification},
+year = {2018},
+publisher = {Curran Associates Inc.},
+address = {Red Hook, NY, USA},
+abstract = {A fundamental problem in program verification concerns inferring loop invariants. The problem is undecidable and even practical instances are challenging. Inspired by how human experts construct loop invariants, we propose a reasoning framework CODE2INV that constructs the solution by multi-step decision making and querying an external program graph memory block. By training with reinforcement learning, CODE2INV captures rich program features and avoids the need for ground truth solutions as supervision. Compared to previous learning tasks in domains with graph-structured data, it addresses unique challenges, such as a binary objective function and an extremely sparse reward that is given by an automated theorem prover only after the complete loop invariant is proposed. We evaluate CODE2INV on a suite of 133 benchmark problems and compare it to three state-of-the-art systems. It solves 106 problems compared to 73 by a stochastic search-based system, 77 by a heuristic search-based system, and 100 by a decision tree learning-based system. Moreover, the strategy learned can be generalized to new programs: compared to solving new instances from scratch, the pre-trained agent is more sample efficient in finding solutions.},
+booktitle = {Proceedings of the 32nd International Conference on Neural Information Processing Systems},
+pages = {7762–7773},
+numpages = {12},
+location = {Montr\'{e}al, Canada},
+series = {NIPS'18}
+}
+
+@misc{kalyan2018,
+      title={Neural-Guided Deductive Search for Real-Time Program Synthesis from Examples}, 
+      author={Ashwin Kalyan and Abhishek Mohta and Oleksandr Polozov and Dhruv Batra and Prateek Jain and Sumit Gulwani},
+      year={2018},
+      eprint={1804.01186},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI}
+}
