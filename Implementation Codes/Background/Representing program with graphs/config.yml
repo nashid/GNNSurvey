@@ -1,0 +1,20 @@
+
+
+# Environment Variables
+corpus_path:
+checkpoint_path:
+train_path:
+val_path:
+test_path:
+token_path:
+
+
+
+
+
+
+
+
+
+
+

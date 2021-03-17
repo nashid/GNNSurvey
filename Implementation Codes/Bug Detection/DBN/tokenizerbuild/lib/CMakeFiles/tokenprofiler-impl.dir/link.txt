@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../bin/lib/libtokenprofiler-impl.a  CMakeFiles/tokenprofiler-impl.dir/TokenVectorPass.cpp.o
+/usr/bin/ranlib ../../bin/lib/libtokenprofiler-impl.a

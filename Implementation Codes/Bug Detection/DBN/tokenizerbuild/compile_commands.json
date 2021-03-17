@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/evan/479/defector/tokenizerbuild/lib",
+  "command": "/usr/bin/c++    -I/home/evan/Downloads/clang+llvm-3.9.0-x86_64-linux-gnu-ubuntu-16.04/include -I/home/evan/479/defector/include   -std=c++14 -fno-rtti -Wall -g   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -o CMakeFiles/tokenprofiler-impl.dir/TokenVectorPass.cpp.o -c /home/evan/479/defector/lib/TokenVectorPass.cpp",
+  "file": "/home/evan/479/defector/lib/TokenVectorPass.cpp"
+},
+{
+  "directory": "/home/evan/479/defector/tokenizerbuild/tools/tokenprofiler",
+  "command": "/usr/bin/c++    -I/home/evan/Downloads/clang+llvm-3.9.0-x86_64-linux-gnu-ubuntu-16.04/include -I/home/evan/479/defector/include -I/home/evan/479/defector/tokenizerbuild/tools/tokenprofiler   -std=c++14 -fno-rtti -Wall -g   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -o CMakeFiles/tokenprofiler.dir/main.cpp.o -c /home/evan/479/defector/tools/tokenprofiler/main.cpp",
+  "file": "/home/evan/479/defector/tools/tokenprofiler/main.cpp"
+}
+]
