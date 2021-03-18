@@ -85,9 +85,14 @@
 \printAffiliationsAndNotice{\icmlEqualContribution} % otherwise use the standard text.
 
 \begin{abstract}
-Our objective for the team project is to create a comprehensive survey paper over the usage of graph neural networks and deep learning in the domain of programming languages. The paper will be titled “GNN In Programming Language”. Till now we have seen several advancements in programming techniques which use graph neural networks to comprehend programming languages. We have also seen works being done in bug detection, similarity checking, synthesis, semantics, decompilation and translation of programs. There is also a growing interest in combining programming languages with other domains like NLP (Code x NLP). These subdomains however are in their infancy and have huge potentials for advancements. In the current state these subdomains are separate and interdomain work is limited. This leads to lack of survey papers which connect these domains and show the complete potential of using graph neural networks in the complete process of programming. This survey paper aims to diminish the separation between these subdomains by aggregating the state of the art work in these subdomains and providing background information to understand the current and potential usage of graph neural networks in programming languages. In this paper we will be focusing on the aforementioned subdomains and going in detail over the state of the art techniques in each one of them. We will also start with an overview of how to represent code using Graph Neural Networks, since this will be the parent step in most applications.
-For this project we will focus on collecting a comprehensive text on related works and background information for the first week. For the next two and a half weeks we will analyze the collected text and implement the models proposed (using the git repositories provided or following the implementation section). Finally we will accrue our analysis into a comprehensive paper along with code used for evaluation in the final one to one and half weeks.
+Research at the intersection of Programming Languages, Deep Learning and Graph Neural Networks has been rapidly evolving over the past few years. Deep Learning and Graph Neural Network techniques has shown tremendous progress and potential across a variety of sub domains in Programming Languages. Our goal with this paper is to survey the rise of Neural techniques and the integration and use of Graph Neural Networks in these techniques, spanning some interesting subdomains. We also point the users towards a common benchmark across Programming Languages and NLP and present ideas on generalized representation learning of Code using GNNs. 
+
 \end{abstract}
+
+\section{Introduction}
+Our objective for this paper is to create a comprehensive survey paper over the usage of graph neural networks and deep learning in the domain of programming languages. Till now we have seen several advancements in programming techniques which use graph neural networks to comprehend programming languages. We have also seen works being done in bug detection, similarity checking, synthesis, semantics and decompilation of programs. There is also a growing interest in combining programming languages with other domains like NLP (Code x NLP). These subdomains however are in their infancy and have huge potentials for advancements. In the current state these subdomains are separate and interdomain work is limited. This leads to lack of survey papers which connect these domains and show the complete potential of using graph neural networks in the complete process of programming. This survey paper aims to diminish the separation between these subdomains by aggregating state of the art work and providing background information to understand the current and potential usage of graph neural networks in programming languages. In this paper we will be focusing on the aforementioned subdomains and going in detail over the state of the art techniques in each one of them. 
+
+We first start with an overview of how to represent code using Graph Neural Networks, since this will be the parent step in most applications. Next, we delve into the specific subdomains. We give an introduction of the subdomain and the relevant challenges, datasets and existing work. We then dive into the existing neural methods used to accomplish the tasks in the subdomain and survey the different methods and how they have evolved with time. Towards the end, we survey an interesting benchmark across the domains of Programming Language and NLP and present some ideas on how GNNs can be used to accelerate common and cross domain research in the area. We wrap up with some future work and ideas along with the conclusion.
 
 
 \section{Background}
@@ -123,242 +128,6 @@ Given a program and an existing variable v, They build a program graph as discus
 \subsection{Programs Graphs for VarMisuse}
 To model VARMISUSE with program graphs, the graph is modified. First, to compute a context representation c(t) for a slot t where the used variable is predicted, a new node v$_{<SLOT>}$ at the position of t is inserted, corresponding to a “hole” at this point, and connection is made to the remaining graph using all applicable edges that do not depend on the chosen variable at the slot (i.e., everything but LastUse, LastWrite, and LastLexicalUse edges). Then, to compute the usage representation u(t, v) of of each candidate variable v at the target slot, a “candidate” node v$_{t,v}$ for all v in V$_t$ is inserted, and connected to the graph by inserting the LastUse, LastWrite and LastLexicalUse edges that would be used if the variable were to be used at this slot. Each of these candidate nodes represents the speculative placement of the variable within the scope.
 Using the initial node representations, concatenated with an extra bit that is set to one for the candidate nodes v$_{t,v}$ , The GGNN propagation is repeated for 8 time steps. The context and usage representation are then the final node states of the nodes, i.e., c(t) = h($^{v_{<SLOT>}}$) and u(t,v) = h$^{(v_t,v)}$. Finally, the correct variable usage at the location is computed as arg maxv c(t)$^T$ u(t, v). The model is trained using maximum likelihood.
-
-
-
-\section{Decompilation}
-\label{decompilation}
-
-\subsection{Introduction}
-Compiled languages are languages whose source code is compiled into machine understandable code by compilers. This machine code can directly be read and executed by the processor. This low-level machine code can either be in binary form or some other intermediate form. Due to the compilation process, these languages are generally faster and more efficient in addition to giving fine-grained control over hardware variables like memory, CPU and GPU, etc. Most popular compiled languages include Java, C, C++, Go, Rust, etc. The process of converting high level source code into low level machine code or other intermediate formats is called Compilation. This is achieved by compilers and is pretty straight forward once we have access to the language specific compiler.
-
-Naturally, the inverse process involves taking machine code in binary format and retrieving the source code. This inverse process is called Decompilation. This process is not so trivial and involves many complex challenges. The semantics of the high level programming language are often lost during compilation. \citet{coda} state that there are both intra-statement and inter-statement dependencies in the low-level instructions that need to be preserved by the decompiler. Although challenging, Decompilation is necessary in a variety of applications. Security analysis is crucial for low level code, and decompilation can help in areas like malware analysis and vulnerable software patching as presented in \citet{kolbitsch2009effective} and \citet{yakdan2016helping}. Moreover, \citet{lee2011tie} show that malicious attackers can use decompilers to reverse engineer low level code and exploit commercial software. \citet{katz2019towards} also mention that decompilation can be useful for porting code to different hardware as well as source level analysis and optimization tools. Hence, having efficient and accurate decompilation tools can be of utmost importance.
-
-\subsection{Conventional Decompilers}
-Lots of research have been done for Decompilers over the years \cite{cifuentes1994reverse, emmerik2004using,brumley2011bap,bao2014byteweight,rosenblum2008learning,yakdan2016helping,brumley2013native}. Many rule-based and pattern matching decompilers have been developed like Hex-Rays \cite{hexray}, Phoenix \cite{brumley2013native} and the most recent one RetDec \cite{kvroustek2017retdec}. These compilers use pre-defined rules to match patterns in the low level code to control flow graphs of the high level code and translate the instructions accordingly. When such patterns are not found, the decompiler uses \textit{goto} statements in C. This is just like a line-to-line translation from low level code to C. Some decompilers like DREAM++ \cite{yakdan2015no,yakdan2016helping} exist which do not use \textit{goto} statements. However, these are still hand crafted.
-
-Such hand-crafted compilers face a variety of problems like:
-\begin{itemize}
-    \item Most of these decompilers are handcrafted for a specific source-target language pair. This requires a lot of effort in itself, and this effort has to be replicated for each new source-target pair for which we want to build a decompiler.
-    \item The output high level code fails to preserve the functionality of the low level code in most cases.
-    \item The output high level code is not semantically readable and often lacks human friendliness. It also fails to use abstractions to represent the high level code as humans do. As a result, the reversed code is often hard to interpret and use it in corresponding applications.
-\end{itemize}
-
-\subsection{Problem Definition}
-\citet{coda} gives a nice technical definition of the problem which we can reuse here. Let $P$ denote the high level program and $\tau$ denote the compiler. Hence, we can get the low level code as $\phi = \tau(P)$. They define the decompiler $\tau^{-1}$ that satisfies $\tau(P^{'}) = \tau(P) \text{ where } P^{'} = \tau^{-1}(\phi)$.
-
-\subsection{Data Generation}
-Data generation for decompilation tasks is relatively trivial due to the free availability of compilers. However, there are still some challenges. Generating source-target pairs can be done by taking the source code and running it through a compiler to get the executable or low level code. Nuances involve selecting the source code, selecting the different architectures for the compiler, selecting whether to produce the executable or the assembly instructions, etc. 
-
-\citet{katz2018using} suggest creating a database of source-target pairs by compiling programs using a customized compiler based on Clang and LLVM. This compiler pairs AST trees and subtrees of source code with the corresponding low level machine code output by the compiler.They constrain the pairs by adding the following restrictions - 112 or fewer binary low level tokens and 88 or fewer source code tokens. The programs they use for their dataset are from open source RPMs for Fedora containing C source code. Comprehensive details are provided in their paper.
-
-\citet{katz2019towards} generate samples for their decompiler to train on using random code samples from a subset of the C programming language. They do this by sampling the grammar of the language. These samples are guaranteed to be syntactically and grammatically correct. They then compile their code samples using the provided compiler. Doing so results in a dataset of matching pairs of statement, one in C and the other in Lll , that can be used by the model for training and validation. Note the two differing approaches here - taking C code from open source repos vs. using sampling to generate C source code. 
-
-\citet{coda} use a two-step approach to decompilation (which we will discuss later). To build the dataset for stage 1, they randomly generate 50,000 pairs of high level programs with their corresponding compiled low level code. The compilation occurs using clang with all optimizations disabled. The source code programs can be roughly classified into short and long programs with an average length of 15 and 30 each. Their corresponding tree representations have a maximum depth of 3. They also use real world programs like neural network construction programs in pytorch C++ API and Hacker’s Delight loop-free programs. The dataset for the next stage is constructed by injecting various types of errors into the high level program. 10-20\% token errors are injected. The locations for these errors are sampled randomly using a uniform distribution. Once again, detailed statistics and methods are provided in their paper.
-
-N-Bref \cite{nbref} assess the performance of their model on various benchmarks by using both generated high level code using their dataset generator as well as code written by humans in the form of Leetcode solutions to Problems (2017). The binary low level code is assembled using the GNU binary utilities to obtain the assembly code. To generate ASTs for the high level C code, the authors implement a parser using clang compiler for python. Their dataset generator for generated samples is built on top of csmith \cite{yang2011finding} - a code generation tool for compiler debugging. Their dataset generator avoids expression collision (EC). For instance, unary operators like \textit{i++} are converted to binary operators like \textit{i = i + 1} and all while loops are converted to for loops. This improves performance and also reduces confusion. The dataset generator also has several hyperparameters to control the depth, size, nesting, etc of the high level code. Here also the code is compiled with no optimizations. Previous works \cite{brumley2013native,lee2011tie,lin2010automatic} also
-disabled optimizations, because many optimizations change variable types and rewrite source code
-(e.g. loop-invariant optimization) which will result in unfair accuracy evaluations. Their dataset is available to download from \url{https://www.dropbox.com/s/33fop57jjq0wwa9/POJ-104.tar.gz?dl=1}.
-
-A common theme across approaches is to take high level source code (mostly in C) and use compilers with some flags to generate the corresponding dataset pairs. Each approach tunes some nuances to generate their own datasets, but at the high level they have a lot of similarities. For future research, it will be nice to have a common benchmark and dataset for decompilation tasks. A common benchmark will aid in unbiased comparison of different methods and will also help more people easily research novel methods once a common dataset is easily available.
-
-\subsection{Evaluation}
-There are many different ways to evaluate decompilation tasks. You could compare the difference between the original source code and the generated source code using something like Levenshtein edit distance (LD) \cite{hyyro2001explaining}. You could compare the output of the original source code and the generated source code by compiling and then executing the binaries. Other works use BLEU, edit distance ratio, and syntactic correctness ratio \cite{nguyen2013lexical}. We will take a look at some of the approaches used by papers that use neural methods for decompilation.
-
-\citet{katz2018using} use a separate test dataset to evaluate their model. They feed their trained model sequences of binary input code. The model outputs a series of tokens corresponding to the predicted output in the source language C aka the generated C source code. They use two evaluation metrics to assess the quality of the C source code generated by their technique. Since they use RNNs, the first metric, perplexity, is based on the RNN’s internal sampled softmax loss function, as described in \citet{jean2014using}, and is used during RNN training. It is a measure of the accuracy of a probabilistic model in predicting a sample \cite{shannon2001mathematical}. They use the perplexity measurement as a proxy for RNN performance to determine when to end training. The second metric is
-based on the Levenshtein edit distance between the sequence of tokens in the ground truth source code associated with a given binary sequence and the sequence of tokens output by the RNN. They use two variations on edit distance. First is to look at straight edit distance between the tokens in the prediction and those in the ground truth snippet. Second, to ensure differences in identifier names and constants do not influence results, they lex both the output translations and ground truth snippets to obtain sequences of token types and perform the edit distance calculation between corresponding sequences of token types. They report the average edit distance for the exact tokens predicted; the average edit distance for the types of tokens predicted; and the percent of predicted token sequences that match the ground truth token sequences perfectly, without post-processing.
-
-On the other hand, \citet{katz2019towards} uses the deterministic nature of the compiler to evaluate their model. After translating the inputs, for each pair of input i and corresponding translation t (i.e. the decompiled code), they recompile t and compare the output to i. This allows them to keep track of progress and success rates, even when the correct translation is not known in advance. Exact details are described in the paper. Despite holding the ground-truth for the test set (the C used to generate the set), they decided not to compare the decompiled code to the ground-truth because in some cases, different C statements could be compiled to the same low-level code (e.g. the statements x = x + 1 and x++). They believe that their evaluation method allows for such occurrences and is closer to what would be applied in a real use-case.
-
-\citet{coda} (Coda) assess the performance of their model on various synthetic benchmarks with different difficulty levels and real-world applications. Given the binary executable as the input, we use an open-source disassembler \cite{mips,redasm} for MIPS \cite{hennessy1982mips} and x86-64 \cite{guide2011intel} architecture to generate the corresponding assembly code that is fed to the model. They evaluate the performance of the Coda using two main metrics: token accuracy and program accuracy. Token accuracy is defined as the percentage of the predicted tokens in high-level Programming Language that match with the ground-truth ones. Program accuracy is defined as the ratio between the number of predicted programs with 100% token accuracy and the number of total recovered programs.
-
-NBref \cite{nbref} uses different metrics for different stages of their model. For the source code generation stage, they use token accuracy and the graph edit distance \cite{sanfeliu1983distance} without enforcing the match between predicted and ground truth AST on graph generation. The metric is fair to evaluate decompilation tasks as we remove all the Expression collision. For the data-type solver stage, they use two metrics: (i) macro accuracy and (ii) micro accuracy.
-
-Often, these metrics are combined and calculated in ways that give the success rates of decompilation in percentages. The evaluation metrics and protocol seem to vary across different neural decompilation approaches. This makes consistent evaluation across different methods difficult. Since this is a fairly recent research area, a standard evaluation benchmark and metric along with the standard dataset proposed earlier will aid in moving research forward in this domain.
-
-Next we will discuss the different neural decompilation approaches at a high level.
-
-\subsection{RNN and Neural Machine Translation (NMT) based approaches}
-RNNs have become very popular for sequential Machine Learning tasks like translation, question answering ,etc \cite{sutskever2014sequence}. RNNs have feedback loops which permit persistence of data which in turn allows sequential processing \cite{siegelmann1993foundations}. An unrolled recurrent neural network has a natural sequence-like structure which makes it well suited for translation tasks. There are several variations on RNNs including the LSTM \cite{hochreiter1997long} which has increasingly become the go-to RNN of choice. LSTMs help preserve long term dependencies and have shown major improvements when dealing with longer sequences. A particular variant of RNNs is the sequence to sequence model or the seq2seq, which takes in an input sequence and generates an output sequence. As you can imaging, such seq2seq models are very useful for tasks like natural language translation \cite{cho2014learning}.
-
-Decompilation can be seen as a natural expansion of the language translation task, but for programming languages. Translation for programming languages can also include translating between two high level languages like Java and Python. But decompilation deals with translation between a high level language and a low level binary executable/machine code. 
-
-\begin{figure*}[ht]
-\centering
-\begin{subfigure}{\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{Images/decompilation_katz2018.png}
-    \caption{\citet{katz2018using}'s Architecture of RNN decompilation system}
-    \label{decompilation_katz2018}
-\end{subfigure}
-\hfill
-\begin{subfigure}{\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{Images/decompilation_katz2019.png}
-    \caption{\citet{katz2019towards}'s two phase pipeline. (1) canonicalized x86 input, (2) NMT output, (3) templated output, (4) final fixed output.}
-    \label{decompilation_katz2019}
-\end{subfigure}
-\end{figure*}
-
-\citet{katz2018using} is one of the first approaches to adapt seq2seq RNN models for decompilation. Their sequence-to-sequence model is composed of two recurrent neural networks: an encoder, which processes the input sequence, and a decoder,
-which creates outputs. Further, the sequence-to-sequence model contains a hidden state, C, which summarizes the entire input sequence. The output is generated from the decoder by taking in the hidden state and the current input and yielding a probability distribution from an activation function like Softmax. To modify this model for decompilation, they make many changes in all steps of the pipeline including pre-processing, model architecture, post-processing, etc. The first step involves tokenization of the input-output pair i.e. the source-target pair of the high level code/ low level code pair. The appropriate tokenizer is chosen and built based on expert domain knowledge. The authors also use bucketing to separate out different lengths of the input sequence \cite{bucketing}. Each bucket has its own RNN comprising of the encoder and decoder. Exact details can be found in the paper. The pipeline for an input pair looks like this - 
-\begin{itemize}
-    \item The binary low level code is tokenized and converted to a list of integers corresponding to the indices in the dictionary for the low level code of the tokenizer.
-    \item The list of integers goes through bucketing to choose the relevant bucket and RNN
-    \item The list then goes through the encoder to generate a hidden state for the binary code.
-    \item The decoder then takes this state and outputs a probability distribution representing tokens in the high level code. This distribution is then converted to a list of integers with the integers corresponding to the indices in the dictionary for the high level code in the tokenizer.
-    \item The tokens for the high level code are retrieved and combined from that dictionary.
-\end{itemize}
-
-This approach is summarized in Fig. \ref{decompilation_katz2018}. It does not take into consideration the differences between natural languages and programming languages, thus leading to ineffective results. For example, as \citet{katz2019towards} point out, the code they generate often cannot be compiled or is not equivalent to the original source code. This approach did however show the possibility of NMT for decompilation, and served as a stepping stone for the next approach proposed by \citet{katz2019towards}. 
-
-\begin{figure*}[ht]
-\vskip 0.2in
-\begin{center}
-\centerline{\includegraphics[width=\textwidth]{Images/decompilation_coda.png}}
-\caption{\citet{coda}. Coda's end to end pipeline}
-\label{decompilation_coda}
-\end{center}
-\vskip -0.2in
-\end{figure*}
-
-\citet{katz2019towards} combines Neural Machine Translation (NMT) and Program analysis to improve the performance of their Neural Decompilation model and make it more practically useful and viable. They also propose a framework called TraFix that can automatically learn a decompiler from a compiler and check the correctness of the decompiler using a verifier. Their approach consists of two complimentary phases:
-\begin{itemize}
-    \item Generating a code template that, when compiled, matches the computation structure of
-the input. The input is the low level binary code.
-    \item Filling the template with values and constants that result in code equivalent to the input. This means that the output from running the executable will be the same for both cases.
-\end{itemize}
-They use a NMT model combined with a feedback loop which facilitates active learning based on the outputs of phase 1. Phase 1 results are compared to the computation structure of the input. If they match, the generated code moves to phase 2. If not, the dataset is updated and the model is trained again. The authors use LSTMs for their NMT model. The two phased pipeline is summarized in Fig. \ref{decompilation_katz2019}.
-
-NMT based techniques are still primarily sequential and fail to incorporate the graph and tree structures of code like control flow graphs and abstract syntax trees. We will take a look at some newer methods which try to incorporate these properties.
-
-\subsection{Abstract Syntax Tree (AST) based Neural Decompilation}
-Coda \cite{coda} also uses a two phase learning approach and an NMT model at its base. But it tries to incorporate the code structure into the encoder and decoder of the RNN. Its two phase approach can be described as:
-\begin{itemize}
-    \item It uses an instruction type-aware encoder and a abstract syntax tree (AST) decoder
-for translating the input binary into the target PL. Their encoder deploys separate RNNs for different
-types of statements, thus the statement boundaries are preserved (This is different from bucketing used by \citet{katz2019towards}). Furthermore, the control and data dependency in the input program are translated to the connections between the hidden states of corresponding RNNs. The output from the AST decoder maintains the dependency constraints and statement boundaries using terminal nodes, which facilitates learning the grammar of the target PL.
-    
-    \item In this stage, Coda employs an RNN-based error predictor (EP) to identify potential
-prediction mistakes in the output program from Phase 1. Ensembling method can be used to boost
-the performance of the error prediction. The EP is used to guide the iterative correction of the output
-program. Unlike traditional decompilers which utilize only the syntax information from the input,
-Coda leverages the Levenshtein edit distance (LD) between the compilation of the updated output
-program and the ground-truth low-level code to prevent false alarms induced by the EP. This can be considered conceptually similar to phase 2 of \citet{katz2019towards}.
-
-\end{itemize}
-
-Coda's two phase approach is summarized in Figure. \ref{decompilation_coda}. Additionally, they also employ a technique called Attention Feeding to combine different contexts in the AST decoder. This can be considered similar to message passing in graphs, since trees are a form of graph. The Attention Feeding is comprised of parent attention feeding and input instruction attention feeding. Parent feeding refers to context from the parent of the current node, and input feeding refers to context from the current node's corresponding node in the input. 
-
-\subsection{Bringing Graph Neural Networks into the picture}
-Even after incorporating AST structure, the base models of the previous approach are still derived from natural language based seq2seq models. This disregards the intrinsic structure of code (graphs/trees). To the best of our knowledge, \cite{nbref} is the first Neural Decompilation approach which utilizes Graph Neural Networks (GNNs) to represent code in the context of decompilation. They use a backbone structural transformer \cite{vaswani2017attention} with inductive Graph Neural Networks \cite{hamilton2017inductive} to represent the low-level code (LLC) as control/dataflow dependency graphs and source code as Abstract Syntax Tree (AST).
-
-Their pipeline also involves a two step approach - data type solver (DT-Solver) and source code generator (SC-Gen). The output of the data type solver is used as the decoder input of the source
-code generation. Both use the same backbone with GNNs.
-
-\begin{figure*}[ht]
-\centering
-\begin{subfigure}{\textwidth}
-   \centerline{\includegraphics[width=\textwidth]{Images/decompilation_nbref.png}}
-    \caption{NBref's \cite{nbref} backbone neural architecture design.}
-    \label{decompilation_nbref} 
-\end{subfigure}
-\hfill
-\begin{subfigure}{\textwidth}
-   \centerline{\includegraphics[width=\textwidth]{Images/nbref_results.png}}
-    \caption{NBref's \cite{nbref} results compared to baselines and Coda (Ins2AST + attn).}
-    \label{nbref_results} 
-\end{subfigure}
-\end{figure*}
-
-\begin{table*}[ht]
-\caption{Comparison of different Neural Decompilation Techniques}
-\label{decompilation_comparison}
-\vskip 0.15in
-\begin{center}
-\begin{tabular}{|l|l|l|l|l|l|l|}
-\toprule
-Name & Citation & Year & Phases & Model Architecture & Model Layer & GNNs? \\
-\midrule
-\citet{katz2018using} RNN   & \cite{katz2018using}& 2018 & 1 & Encoder-Decoder & RNN & No\\
-TraFix   & \cite{katz2019towards}& 2019 & 2 & Encoder-Decoder & RNN & No\\
-Coda  & \cite{coda}& 2019 & 2 & Encoder-Decoder & Attention + LSTM & No\\
-NBref  & \cite{nbref}& 2021 & 2 & Transformer & Self-Attention + GNN & Yes\\
-\bottomrule
-\end{tabular}
-\end{center}
-\vskip -0.1in
-\end{table*}
-
-\textbf{Structural Transformer with GNNs}
-The backbone structural transformer has three components: (1) LLC encoder, (2) AST encoder, and (3) AST decoder. The LLC encoder takes the low-level instructions converted from binaries using disassembler as input. AST encoder takes the input of a previous (partial) AST, and the predictions of AST decoder are AST nodes, which can be equivalently converted to the high-level program. Here we will focus on the encoders and how they use GNNs. The GNN of choice in this paper is GraphSAGE (\citet{hamilton2017inductive}). GNNs are used in two places - 1) To embed the initial code/AST structure 2) To augment the Attention Layers in the Transformer
-
-\textbf{Initial GNN embeddings}
-The LLC encoder converts the initial low level code into a graph where each node is representated by its feature vector including features like register / instruction type ($var_t$
-/ $ins_t$), position in the instruction ($n_{pos}$), node id ($n_{id}$) and numerical field ($n_{num}$). Edges are generated using hand crafted rules. Aggregation is done using max pooling. Aggregation vector and current state of the node are fed into a fully connected layer to get the next state. 3 layers are used for the GNN.
-
-The AST encoder encodes the AST tree from the AST decoder to guide future
-tree expansions. They treat the AST tree as a graph (V) and embed it using GraphSAGE as well. The input of the GNN includes meta-features of the tokenized AST node and a boolean indicating whether the node is expanded in this step. The output hidden states from the GNN is fed into the self-attention module. At the end of the AST encoder, they integrate the AST encoder output and LLC encoder output using an additional multi-head attention layer.
-
-
-\textbf{GNN Augmentation for Attention}
-The output of the attention layers is converted to a graph using the same edge rules in the LLC encoder and those states are then fed again into the GNN to obtain embeddings that incorporate the inductive biases of GNNs.
-
-The neural architecture along with the GNN layers are visualized in Figure. \ref{decompilation_nbref}. Experiments show that Nbref outperforms the corresponding transformer baseline and previous Neural Decompilers like Coda \cite{coda}. It also outperforms other models on human written Leetcode solutions. The performance numbers are visible in Figure \ref{nbref_results}. The performance gain over baseline Transformer clearly shows the value of using GNNs. Since most state of the art NMT models use transformers now, performance gains over previous Neural Decompilers using RNNs is expected. 
-
-Critics for Nbref have mentioned that they do not propose anything novel, but the use of GNN based representations in Neural Decompilation is definitely the first we have come across. GNNs to represent code is a natural choice in many domains related to programming languages because of the graph and tree based structure of code. We believe future research will definitely involve the use of GNNs for learning representations of code. The way this is done might be tailored differently for decompilation to improve performance and efficiency. Once again, a common dataset and benchmark may help accelerate research in Neural Decompilation. 
-
-\subsection{Comparison}
-Table \ref{decompilation_comparison} compares the relevant Neural Decompilation Approaches over the last few years. As we can see, only recently have GNNs been used in Neural decompilation. However, using GNNs has directly contributed to considerable improvements in performance as can be seen from Figure \ref{nbref_results}. We expect the use of GNNs to become mainstream in Neural Decompilation in the coming years.
-
-\begin{figure*}[ht]
-\centering
-\centerline{\includegraphics[width=\textwidth]{Images/codexgluetasks.jpeg}}
-\caption{\citet{lu2021codexglue}. CodeXGlue's tasks}
-\label{codexgluetasks}
-\end{figure*}
-
-\section{CodeXGlue}
-
-\begin{figure*}[ht]
-    \centering
-    \centerline{\includegraphics[width=\textwidth]{Images/codexgluebaselines.png}}
-    \caption{\citet{lu2021codexglue}. CodeXGlue's baseline architectures}
-    \label{codexgluebaselines}
-\end{figure*}
-
-Benchmarks in Natural Language Processing have played an important role in the progress of the field. Particularly, GLUE \cite{wang2018glue} is a comprehensive benchmark for training, evaluating and analyzing natural language understanding systems. It includes 9 tasks with corresponding datasets and evaluation guidelines, a diagnostic dataset to analyze NLP systems and a public leaderboard to track progress in the field. As expected, Deep Learning systems have dominated the benchmark and even surpassed human performance. As a result of this, SuperGLUE \cite{wang2019superglue} has been released as a continuation of GLUE with harder challenges in order to further progress the field.
-
-Benchmarks provide a unified and system agnostic way for several different researchers to compare their approaches on a common ground. Most NLP papers dealing with finetuning language models will mention GLUE or SuperGLUE, and publish their results to the public leaderboard \footnote{https://gluebenchmark.com/leaderboard}. Looking at the incredible success of such benchmarks in NLP warrants a similar benchmark in applying Machine Learning to the domain of Programming Languages and Code. That is precisely what the recently released CodeXGlue (\citet{lu2021codexglue}) aims to achieve. Similar to GLUE, CodeXGlue contains a bunch of tasks paired with their corresponding processed datasets and a public leaderboard. The leaderboard can be found at \url{https://microsoft.github.io/CodeXGLUE/} and the github repo is at \url{https://github.com/microsoft/CodeXGLUE}.
-
-We have so far discussed many domains of Programming Languages across which Deep Learning and Graph Neural Networks have shown tremendous potential. Now, we intend to cover this benchmark as a unifying evaluation point that will guide further research in applying Deep Learning and GNNs to the domain of programming languages. We will cover the tasks of the benchmark in brevity and also include short descriptions of the baselines. We will end this section by looking at how Graph Neural Networks can be utilized to vastly improve scores across all tasks in the benchmark. We hope this will serve as viable research direction for interested people.
-
-\subsection{Tasks}
-CodeXGlue includes 14 datasets for 10 diversified code intelligence tasks covering the following scenarios:
-\begin{itemize}
-    \item code-code (clone detection, defect detection, cloze test, code completion, code repair, and code-to-code translation)
-    \item text-code (natural language code search, text-to-code generation)
-    \item code-text (code summarization)
-    \item text-text (documentation translation)
-\end{itemize}
-
-The tasks can be summarized in Figure \ref{codexgluetasks} which is taken from their github repo. The last category of tasks \textit{text-text} leans more towards NLP but the rest contain code as their prime or major component. With code comes the intrinsic structure of programming languages including trees and graphs, and this varies greatly from natural languages. Therefore, we believe the inductive biases of Graph Neural Networks are very well suited to represent the code aspect in these tasks. Since this is a fairly recent benchmark, the leaderboard mostly contains baselines as of now. Most of the baselines mentioned in the CodeXGlue paper and papers like CodeBERT \cite{feng2020codebert} use transformer models which are directly adapted from their NLP counterparts. Hence, there is plenty of room for innovation and climbing the leaderboard on this benchmark. We will briefly cover the baselines and then see how Graph Neural Networks can be used to bolster these deep learning models.
-
-\subsection{Baselines}
-The baselines use different variants of Transformers as their backbone. The tasks can be approximately classified into understanding tasks like code search, code clone detection, defect detection, cloze test (similar to masked language modeling) and generative tasks like code repair, code translation, code completion, code generation, etc.
-
-For code understanding tasks, the authors provide CodeBERT \cite{feng2020codebert} as a baseline. CodeBERT is very similar to BERT \cite{devlin2018bert} and treats programming language as sequential. The model is pretrained on the CodeSearchNet dataset \cite{husain2019codesearchnet} using a masked language modeling objective like BERT and a combination of comments and code as input. It is then fine tuned on the downstream CodeXGlue tasks.
-
-For generative tasks like code generation and code completion, the authors provide CodeGPT as the baseline. CodeGPT is inspired from GPT2 \cite{radford2019better}. CodeGPT contains pre-trained monolingual models on Python and Java corpora from the CodeSearchNet dataset, which includes 1.1M Python functions and 1.6M Java methods. They provide two variants of this baseline, one trained from scratch and one using GPT2 as the starting point.
-
-For tasks which are more seq2seq in nature like code translation, the authors provide a encoder-decoder baseline with CodeBERT as the encoder and a custom transformer as the decoder.
-
-All the baselines are summarized in Figure \ref{codexgluebaselines}.
-
-\subsection{Graph Neural Networks}
-The baselines include models adapted from the NLP domain. As a result, the baselines treat code as natural language and disregards its intrinsic structure and syntactic biases. As we have seen throughout the paper, Graph Neural Networks have shown great promise in tasks related to programming languages. In section 1, we saw the latest research in representing code using graph neural networks. In the rest of the sections, we saw how GNNs and representations using GNNs are adapted to specific domains. 
-
-A lot of those techniques can be used across multiple tasks in CodeXGlue and we believe they can give consistent improvements as compared to the baselines. We will explore some ways that we envision GNNs being used across tasks in CodeXGlue.
 
 \section{Program Similarity and Classification}
 \label{similarity}
@@ -930,8 +699,251 @@ This leads to the following table and graphs for results.
 \vskip -0.2in
 \end{figure}
 
+\section{Decompilation}
+\label{decompilation}
+
+\subsection{Introduction}
+Compiled languages are languages whose source code is compiled into machine understandable code by compilers. This machine code can directly be read and executed by the processor. This low-level machine code can either be in binary form or some other intermediate form. Due to the compilation process, these languages are generally faster and more efficient in addition to giving fine-grained control over hardware variables like memory, CPU and GPU, etc. Most popular compiled languages include Java, C, C++, Go, Rust, etc. The process of converting high level source code into low level machine code or other intermediate formats is called Compilation. This is achieved by compilers and is pretty straight forward once we have access to the language specific compiler.
+
+Naturally, the inverse process involves taking machine code in binary format and retrieving the source code. This inverse process is called Decompilation. This process is not so trivial and involves many complex challenges. The semantics of the high level programming language are often lost during compilation. \citet{coda} state that there are both intra-statement and inter-statement dependencies in the low-level instructions that need to be preserved by the decompiler. Although challenging, Decompilation is necessary in a variety of applications. Security analysis is crucial for low level code, and decompilation can help in areas like malware analysis and vulnerable software patching as presented in \citet{kolbitsch2009effective} and \citet{yakdan2016helping}. Moreover, \citet{lee2011tie} show that malicious attackers can use decompilers to reverse engineer low level code and exploit commercial software. \citet{katz2019towards} also mention that decompilation can be useful for porting code to different hardware as well as source level analysis and optimization tools. Hence, having efficient and accurate decompilation tools can be of utmost importance.
+
+\subsection{Conventional Decompilers}
+Lots of research have been done for Decompilers over the years \cite{cifuentes1994reverse, emmerik2004using,brumley2011bap,bao2014byteweight,rosenblum2008learning,yakdan2016helping,brumley2013native}. Many rule-based and pattern matching decompilers have been developed like Hex-Rays \cite{hexray}, Phoenix \cite{brumley2013native} and the most recent one RetDec \cite{kvroustek2017retdec}. These compilers use pre-defined rules to match patterns in the low level code to control flow graphs of the high level code and translate the instructions accordingly. When such patterns are not found, the decompiler uses \textit{goto} statements in C. This is just like a line-to-line translation from low level code to C. Some decompilers like DREAM++ \cite{yakdan2015no,yakdan2016helping} exist which do not use \textit{goto} statements. However, these are still hand crafted.
+
+Such hand-crafted compilers face a variety of problems like:
+\begin{itemize}
+    \item Most of these decompilers are handcrafted for a specific source-target language pair. This requires a lot of effort in itself, and this effort has to be replicated for each new source-target pair for which we want to build a decompiler.
+    \item The output high level code fails to preserve the functionality of the low level code in most cases.
+    \item The output high level code is not semantically readable and often lacks human friendliness. It also fails to use abstractions to represent the high level code as humans do. As a result, the reversed code is often hard to interpret and use it in corresponding applications.
+\end{itemize}
+
+\subsection{Problem Definition}
+\citet{coda} gives a nice technical definition of the problem which we can reuse here. Let $P$ denote the high level program and $\tau$ denote the compiler. Hence, we can get the low level code as $\phi = \tau(P)$. They define the decompiler $\tau^{-1}$ that satisfies $\tau(P^{'}) = \tau(P) \text{ where } P^{'} = \tau^{-1}(\phi)$.
+
+\subsection{Data Generation}
+Data generation for decompilation tasks is relatively trivial due to the free availability of compilers. However, there are still some challenges. Generating source-target pairs can be done by taking the source code and running it through a compiler to get the executable or low level code. Nuances involve selecting the source code, selecting the different architectures for the compiler, selecting whether to produce the executable or the assembly instructions, etc. 
+
+\citet{katz2018using} suggest creating a database of source-target pairs by compiling programs using a customized compiler based on Clang and LLVM. This compiler pairs AST trees and subtrees of source code with the corresponding low level machine code output by the compiler.They constrain the pairs by adding the following restrictions - 112 or fewer binary low level tokens and 88 or fewer source code tokens. The programs they use for their dataset are from open source RPMs for Fedora containing C source code. Comprehensive details are provided in their paper.
+
+\citet{katz2019towards} generate samples for their decompiler to train on using random code samples from a subset of the C programming language. They do this by sampling the grammar of the language. These samples are guaranteed to be syntactically and grammatically correct. They then compile their code samples using the provided compiler. Doing so results in a dataset of matching pairs of statement, one in C and the other in Lll , that can be used by the model for training and validation. Note the two differing approaches here - taking C code from open source repos vs. using sampling to generate C source code. 
+
+\citet{coda} use a two-step approach to decompilation (which we will discuss later). To build the dataset for stage 1, they randomly generate 50,000 pairs of high level programs with their corresponding compiled low level code. The compilation occurs using clang with all optimizations disabled. The source code programs can be roughly classified into short and long programs with an average length of 15 and 30 each. Their corresponding tree representations have a maximum depth of 3. They also use real world programs like neural network construction programs in pytorch C++ API and Hacker’s Delight loop-free programs. The dataset for the next stage is constructed by injecting various types of errors into the high level program. 10-20\% token errors are injected. The locations for these errors are sampled randomly using a uniform distribution. Once again, detailed statistics and methods are provided in their paper.
+
+N-Bref \cite{nbref} assess the performance of their model on various benchmarks by using both generated high level code using their dataset generator as well as code written by humans in the form of Leetcode solutions to Problems (2017). The binary low level code is assembled using the GNU binary utilities to obtain the assembly code. To generate ASTs for the high level C code, the authors implement a parser using clang compiler for python. Their dataset generator for generated samples is built on top of csmith \cite{yang2011finding} - a code generation tool for compiler debugging. Their dataset generator avoids expression collision (EC). For instance, unary operators like \textit{i++} are converted to binary operators like \textit{i = i + 1} and all while loops are converted to for loops. This improves performance and also reduces confusion. The dataset generator also has several hyperparameters to control the depth, size, nesting, etc of the high level code. Here also the code is compiled with no optimizations. Previous works \cite{brumley2013native,lee2011tie,lin2010automatic} also
+disabled optimizations, because many optimizations change variable types and rewrite source code
+(e.g. loop-invariant optimization) which will result in unfair accuracy evaluations. Their dataset is available to download from \url{https://www.dropbox.com/s/33fop57jjq0wwa9/POJ-104.tar.gz?dl=1}.
+
+A common theme across approaches is to take high level source code (mostly in C) and use compilers with some flags to generate the corresponding dataset pairs. Each approach tunes some nuances to generate their own datasets, but at the high level they have a lot of similarities. For future research, it will be nice to have a common benchmark and dataset for decompilation tasks. A common benchmark will aid in unbiased comparison of different methods and will also help more people easily research novel methods once a common dataset is easily available.
+
+\subsection{Evaluation}
+There are many different ways to evaluate decompilation tasks. You could compare the difference between the original source code and the generated source code using something like Levenshtein edit distance (LD) \cite{hyyro2001explaining}. You could compare the output of the original source code and the generated source code by compiling and then executing the binaries. Other works use BLEU, edit distance ratio, and syntactic correctness ratio \cite{nguyen2013lexical}. We will take a look at some of the approaches used by papers that use neural methods for decompilation.
+
+\citet{katz2018using} use a separate test dataset to evaluate their model. They feed their trained model sequences of binary input code. The model outputs a series of tokens corresponding to the predicted output in the source language C aka the generated C source code. They use two evaluation metrics to assess the quality of the C source code generated by their technique. Since they use RNNs, the first metric, perplexity, is based on the RNN’s internal sampled softmax loss function, as described in \citet{jean2014using}, and is used during RNN training. It is a measure of the accuracy of a probabilistic model in predicting a sample \cite{shannon2001mathematical}. They use the perplexity measurement as a proxy for RNN performance to determine when to end training. The second metric is
+based on the Levenshtein edit distance between the sequence of tokens in the ground truth source code associated with a given binary sequence and the sequence of tokens output by the RNN. They use two variations on edit distance. First is to look at straight edit distance between the tokens in the prediction and those in the ground truth snippet. Second, to ensure differences in identifier names and constants do not influence results, they lex both the output translations and ground truth snippets to obtain sequences of token types and perform the edit distance calculation between corresponding sequences of token types. They report the average edit distance for the exact tokens predicted; the average edit distance for the types of tokens predicted; and the percent of predicted token sequences that match the ground truth token sequences perfectly, without post-processing.
+
+On the other hand, \citet{katz2019towards} uses the deterministic nature of the compiler to evaluate their model. After translating the inputs, for each pair of input i and corresponding translation t (i.e. the decompiled code), they recompile t and compare the output to i. This allows them to keep track of progress and success rates, even when the correct translation is not known in advance. Exact details are described in the paper. Despite holding the ground-truth for the test set (the C used to generate the set), they decided not to compare the decompiled code to the ground-truth because in some cases, different C statements could be compiled to the same low-level code (e.g. the statements x = x + 1 and x++). They believe that their evaluation method allows for such occurrences and is closer to what would be applied in a real use-case.
+
+\citet{coda} (Coda) assess the performance of their model on various synthetic benchmarks with different difficulty levels and real-world applications. Given the binary executable as the input, we use an open-source disassembler \cite{mips,redasm} for MIPS \cite{hennessy1982mips} and x86-64 \cite{guide2011intel} architecture to generate the corresponding assembly code that is fed to the model. They evaluate the performance of the Coda using two main metrics: token accuracy and program accuracy. Token accuracy is defined as the percentage of the predicted tokens in high-level Programming Language that match with the ground-truth ones. Program accuracy is defined as the ratio between the number of predicted programs with 100% token accuracy and the number of total recovered programs.
+
+NBref \cite{nbref} uses different metrics for different stages of their model. For the source code generation stage, they use token accuracy and the graph edit distance \cite{sanfeliu1983distance} without enforcing the match between predicted and ground truth AST on graph generation. The metric is fair to evaluate decompilation tasks as we remove all the Expression collision. For the data-type solver stage, they use two metrics: (i) macro accuracy and (ii) micro accuracy.
+
+Often, these metrics are combined and calculated in ways that give the success rates of decompilation in percentages. The evaluation metrics and protocol seem to vary across different neural decompilation approaches. This makes consistent evaluation across different methods difficult. Since this is a fairly recent research area, a standard evaluation benchmark and metric along with the standard dataset proposed earlier will aid in moving research forward in this domain.
+
+Next we will discuss the different neural decompilation approaches at a high level.
+
+\subsection{RNN and Neural Machine Translation (NMT) based approaches}
+RNNs have become very popular for sequential Machine Learning tasks like translation, question answering ,etc \cite{sutskever2014sequence}. RNNs have feedback loops which permit persistence of data which in turn allows sequential processing \cite{siegelmann1993foundations}. An unrolled recurrent neural network has a natural sequence-like structure which makes it well suited for translation tasks. There are several variations on RNNs including the LSTM \cite{hochreiter1997long} which has increasingly become the go-to RNN of choice. LSTMs help preserve long term dependencies and have shown major improvements when dealing with longer sequences. A particular variant of RNNs is the sequence to sequence model or the seq2seq, which takes in an input sequence and generates an output sequence. As you can imaging, such seq2seq models are very useful for tasks like natural language translation \cite{cho2014learning}.
+
+Decompilation can be seen as a natural expansion of the language translation task, but for programming languages. Translation for programming languages can also include translating between two high level languages like Java and Python. But decompilation deals with translation between a high level language and a low level binary executable/machine code. 
+
+\begin{figure*}[ht]
+\centering
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{Images/decompilation_katz2018.png}
+    \caption{\citet{katz2018using}'s Architecture of RNN decompilation system}
+    \label{decompilation_katz2018}
+\end{subfigure}
+\hfill
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{Images/decompilation_katz2019.png}
+    \caption{\citet{katz2019towards}'s two phase pipeline. (1) canonicalized x86 input, (2) NMT output, (3) templated output, (4) final fixed output.}
+    \label{decompilation_katz2019}
+\end{subfigure}
+\end{figure*}
+
+\citet{katz2018using} is one of the first approaches to adapt seq2seq RNN models for decompilation. Their sequence-to-sequence model is composed of two recurrent neural networks: an encoder, which processes the input sequence, and a decoder,
+which creates outputs. Further, the sequence-to-sequence model contains a hidden state, C, which summarizes the entire input sequence. The output is generated from the decoder by taking in the hidden state and the current input and yielding a probability distribution from an activation function like Softmax. To modify this model for decompilation, they make many changes in all steps of the pipeline including pre-processing, model architecture, post-processing, etc. The first step involves tokenization of the input-output pair i.e. the source-target pair of the high level code/ low level code pair. The appropriate tokenizer is chosen and built based on expert domain knowledge. The authors also use bucketing to separate out different lengths of the input sequence \cite{bucketing}. Each bucket has its own RNN comprising of the encoder and decoder. Exact details can be found in the paper. The pipeline for an input pair looks like this - 
+\begin{itemize}
+    \item The binary low level code is tokenized and converted to a list of integers corresponding to the indices in the dictionary for the low level code of the tokenizer.
+    \item The list of integers goes through bucketing to choose the relevant bucket and RNN
+    \item The list then goes through the encoder to generate a hidden state for the binary code.
+    \item The decoder then takes this state and outputs a probability distribution representing tokens in the high level code. This distribution is then converted to a list of integers with the integers corresponding to the indices in the dictionary for the high level code in the tokenizer.
+    \item The tokens for the high level code are retrieved and combined from that dictionary.
+\end{itemize}
+
+This approach is summarized in Fig. \ref{decompilation_katz2018}. It does not take into consideration the differences between natural languages and programming languages, thus leading to ineffective results. For example, as \citet{katz2019towards} point out, the code they generate often cannot be compiled or is not equivalent to the original source code. This approach did however show the possibility of NMT for decompilation, and served as a stepping stone for the next approach proposed by \citet{katz2019towards}. 
+
+\begin{figure*}[ht]
+\vskip 0.2in
+\begin{center}
+\centerline{\includegraphics[width=\textwidth]{Images/decompilation_coda.png}}
+\caption{\citet{coda}. Coda's end to end pipeline}
+\label{decompilation_coda}
+\end{center}
+\vskip -0.2in
+\end{figure*}
+
+\citet{katz2019towards} combines Neural Machine Translation (NMT) and Program analysis to improve the performance of their Neural Decompilation model and make it more practically useful and viable. They also propose a framework called TraFix that can automatically learn a decompiler from a compiler and check the correctness of the decompiler using a verifier. Their approach consists of two complimentary phases:
+\begin{itemize}
+    \item Generating a code template that, when compiled, matches the computation structure of
+the input. The input is the low level binary code.
+    \item Filling the template with values and constants that result in code equivalent to the input. This means that the output from running the executable will be the same for both cases.
+\end{itemize}
+They use a NMT model combined with a feedback loop which facilitates active learning based on the outputs of phase 1. Phase 1 results are compared to the computation structure of the input. If they match, the generated code moves to phase 2. If not, the dataset is updated and the model is trained again. The authors use LSTMs for their NMT model. The two phased pipeline is summarized in Fig. \ref{decompilation_katz2019}.
+
+NMT based techniques are still primarily sequential and fail to incorporate the graph and tree structures of code like control flow graphs and abstract syntax trees. We will take a look at some newer methods which try to incorporate these properties.
+
+\subsection{Abstract Syntax Tree (AST) based Neural Decompilation}
+Coda \cite{coda} also uses a two phase learning approach and an NMT model at its base. But it tries to incorporate the code structure into the encoder and decoder of the RNN. Its two phase approach can be described as:
+\begin{itemize}
+    \item It uses an instruction type-aware encoder and a abstract syntax tree (AST) decoder
+for translating the input binary into the target PL. Their encoder deploys separate RNNs for different
+types of statements, thus the statement boundaries are preserved (This is different from bucketing used by \citet{katz2019towards}). Furthermore, the control and data dependency in the input program are translated to the connections between the hidden states of corresponding RNNs. The output from the AST decoder maintains the dependency constraints and statement boundaries using terminal nodes, which facilitates learning the grammar of the target PL.
+    
+    \item In this stage, Coda employs an RNN-based error predictor (EP) to identify potential
+prediction mistakes in the output program from Phase 1. Ensembling method can be used to boost
+the performance of the error prediction. The EP is used to guide the iterative correction of the output
+program. Unlike traditional decompilers which utilize only the syntax information from the input,
+Coda leverages the Levenshtein edit distance (LD) between the compilation of the updated output
+program and the ground-truth low-level code to prevent false alarms induced by the EP. This can be considered conceptually similar to phase 2 of \citet{katz2019towards}.
+
+\end{itemize}
+
+Coda's two phase approach is summarized in Figure. \ref{decompilation_coda}. Additionally, they also employ a technique called Attention Feeding to combine different contexts in the AST decoder. This can be considered similar to message passing in graphs, since trees are a form of graph. The Attention Feeding is comprised of parent attention feeding and input instruction attention feeding. Parent feeding refers to context from the parent of the current node, and input feeding refers to context from the current node's corresponding node in the input. 
+
+\subsection{Bringing Graph Neural Networks into the picture}
+Even after incorporating AST structure, the base models of the previous approach are still derived from natural language based seq2seq models. This disregards the intrinsic structure of code (graphs/trees). To the best of our knowledge, \cite{nbref} is the first Neural Decompilation approach which utilizes Graph Neural Networks (GNNs) to represent code in the context of decompilation. They use a backbone structural transformer \cite{vaswani2017attention} with inductive Graph Neural Networks \cite{hamilton2017inductive} to represent the low-level code (LLC) as control/dataflow dependency graphs and source code as Abstract Syntax Tree (AST).
+
+Their pipeline also involves a two step approach - data type solver (DT-Solver) and source code generator (SC-Gen). The output of the data type solver is used as the decoder input of the source
+code generation. Both use the same backbone with GNNs.
+
+\begin{figure*}[ht]
+\centering
+\begin{subfigure}{\textwidth}
+   \centerline{\includegraphics[width=\textwidth]{Images/decompilation_nbref.png}}
+    \caption{NBref's \cite{nbref} backbone neural architecture design.}
+    \label{decompilation_nbref} 
+\end{subfigure}
+\hfill
+\begin{subfigure}{\textwidth}
+   \centerline{\includegraphics[width=\textwidth]{Images/nbref_results.png}}
+    \caption{NBref's \cite{nbref} results compared to baselines and Coda (Ins2AST + attn).}
+    \label{nbref_results} 
+\end{subfigure}
+\end{figure*}
+
+\begin{table*}[ht]
+\caption{Comparison of different Neural Decompilation Techniques}
+\label{decompilation_comparison}
+\vskip 0.15in
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\toprule
+Name & Citation & Year & Phases & Model Architecture & Model Layer & GNNs? \\
+\midrule
+\citet{katz2018using} RNN   & \cite{katz2018using}& 2018 & 1 & Encoder-Decoder & RNN & No\\
+TraFix   & \cite{katz2019towards}& 2019 & 2 & Encoder-Decoder & RNN & No\\
+Coda  & \cite{coda}& 2019 & 2 & Encoder-Decoder & Attention + LSTM & No\\
+NBref  & \cite{nbref}& 2021 & 2 & Transformer & Self-Attention + GNN & Yes\\
+\bottomrule
+\end{tabular}
+\end{center}
+\vskip -0.1in
+\end{table*}
+
+\textbf{Structural Transformer with GNNs}
+The backbone structural transformer has three components: (1) LLC encoder, (2) AST encoder, and (3) AST decoder. The LLC encoder takes the low-level instructions converted from binaries using disassembler as input. AST encoder takes the input of a previous (partial) AST, and the predictions of AST decoder are AST nodes, which can be equivalently converted to the high-level program. Here we will focus on the encoders and how they use GNNs. The GNN of choice in this paper is GraphSAGE (\citet{hamilton2017inductive}). GNNs are used in two places - 1) To embed the initial code/AST structure 2) To augment the Attention Layers in the Transformer
+
+\textbf{Initial GNN embeddings}
+The LLC encoder converts the initial low level code into a graph where each node is representated by its feature vector including features like register / instruction type ($var_t$
+/ $ins_t$), position in the instruction ($n_{pos}$), node id ($n_{id}$) and numerical field ($n_{num}$). Edges are generated using hand crafted rules. Aggregation is done using max pooling. Aggregation vector and current state of the node are fed into a fully connected layer to get the next state. 3 layers are used for the GNN.
+
+The AST encoder encodes the AST tree from the AST decoder to guide future
+tree expansions. They treat the AST tree as a graph (V) and embed it using GraphSAGE as well. The input of the GNN includes meta-features of the tokenized AST node and a boolean indicating whether the node is expanded in this step. The output hidden states from the GNN is fed into the self-attention module. At the end of the AST encoder, they integrate the AST encoder output and LLC encoder output using an additional multi-head attention layer.
 
 
+\textbf{GNN Augmentation for Attention}
+The output of the attention layers is converted to a graph using the same edge rules in the LLC encoder and those states are then fed again into the GNN to obtain embeddings that incorporate the inductive biases of GNNs.
+
+The neural architecture along with the GNN layers are visualized in Figure. \ref{decompilation_nbref}. Experiments show that Nbref outperforms the corresponding transformer baseline and previous Neural Decompilers like Coda \cite{coda}. It also outperforms other models on human written Leetcode solutions. The performance numbers are visible in Figure \ref{nbref_results}. The performance gain over baseline Transformer clearly shows the value of using GNNs. Since most state of the art NMT models use transformers now, performance gains over previous Neural Decompilers using RNNs is expected. 
+
+Critics for Nbref have mentioned that they do not propose anything novel, but the use of GNN based representations in Neural Decompilation is definitely the first we have come across. GNNs to represent code is a natural choice in many domains related to programming languages because of the graph and tree based structure of code. We believe future research will definitely involve the use of GNNs for learning representations of code. The way this is done might be tailored differently for decompilation to improve performance and efficiency. Once again, a common dataset and benchmark may help accelerate research in Neural Decompilation. 
+
+\subsection{Comparison}
+Table \ref{decompilation_comparison} compares the relevant Neural Decompilation Approaches over the last few years. As we can see, only recently have GNNs been used in Neural decompilation. However, using GNNs has directly contributed to considerable improvements in performance as can be seen from Figure \ref{nbref_results}. We expect the use of GNNs to become mainstream in Neural Decompilation in the coming years.
+
+\begin{figure*}[ht]
+\centering
+\centerline{\includegraphics[width=\textwidth]{Images/codexgluetasks.jpeg}}
+\caption{\citet{lu2021codexglue}. CodeXGlue's tasks}
+\label{codexgluetasks}
+\end{figure*}
+
+\section{CodeXGlue}
+
+\begin{figure*}[ht]
+    \centering
+    \centerline{\includegraphics[width=\textwidth]{Images/codexgluebaselines.png}}
+    \caption{\citet{lu2021codexglue}. CodeXGlue's baseline architectures}
+    \label{codexgluebaselines}
+\end{figure*}
+
+Benchmarks in Natural Language Processing have played an important role in the progress of the field. Particularly, GLUE \cite{wang2018glue} is a comprehensive benchmark for training, evaluating and analyzing natural language understanding systems. It includes 9 tasks with corresponding datasets and evaluation guidelines, a diagnostic dataset to analyze NLP systems and a public leaderboard to track progress in the field. As expected, Deep Learning systems have dominated the benchmark and even surpassed human performance. As a result of this, SuperGLUE \cite{wang2019superglue} has been released as a continuation of GLUE with harder challenges in order to further progress the field.
+
+Benchmarks provide a unified and system agnostic way for several different researchers to compare their approaches on a common ground. Most NLP papers dealing with finetuning language models will mention GLUE or SuperGLUE, and publish their results to the public leaderboard \footnote{https://gluebenchmark.com/leaderboard}. Looking at the incredible success of such benchmarks in NLP warrants a similar benchmark in applying Machine Learning to the domain of Programming Languages and Code. That is precisely what the recently released CodeXGlue (\citet{lu2021codexglue}) aims to achieve. Similar to GLUE, CodeXGlue contains a bunch of tasks paired with their corresponding processed datasets and a public leaderboard. The leaderboard can be found at \url{https://microsoft.github.io/CodeXGLUE/} and the github repo is at \url{https://github.com/microsoft/CodeXGLUE}.
+
+We have so far discussed many domains of Programming Languages across which Deep Learning and Graph Neural Networks have shown tremendous potential. Now, we intend to cover this benchmark as a unifying evaluation point that will guide further research in applying Deep Learning and GNNs to the domain of programming languages. We will cover the tasks of the benchmark in brevity and also include short descriptions of the baselines. We will end this section by looking at how Graph Neural Networks can be utilized to vastly improve scores across all tasks in the benchmark. We hope this will serve as viable research direction for interested people.
+
+\subsection{Tasks}
+CodeXGlue includes 14 datasets for 10 diversified code intelligence tasks covering the following scenarios:
+\begin{itemize}
+    \item code-code (clone detection, defect detection, cloze test, code completion, code repair, and code-to-code translation)
+    \item text-code (natural language code search, text-to-code generation)
+    \item code-text (code summarization)
+    \item text-text (documentation translation)
+\end{itemize}
+
+The tasks can be summarized in Figure \ref{codexgluetasks} which is taken from their github repo. The last category of tasks \textit{text-text} leans more towards NLP but the rest contain code as their prime or major component. With code comes the intrinsic structure of programming languages including trees and graphs, and this varies greatly from natural languages. Therefore, we believe the inductive biases of Graph Neural Networks are very well suited to represent the code aspect in these tasks. Since this is a fairly recent benchmark, the leaderboard mostly contains baselines as of now. Most of the baselines mentioned in the CodeXGlue paper and papers like CodeBERT \cite{feng2020codebert} use transformer models which are directly adapted from their NLP counterparts. Hence, there is plenty of room for innovation and climbing the leaderboard on this benchmark. We will briefly cover the baselines and then see how Graph Neural Networks can be used to bolster these deep learning models.
+
+\subsection{Baselines}
+The baselines use different variants of Transformers as their backbone. The tasks can be approximately classified into understanding tasks like code search, code clone detection, defect detection, cloze test (similar to masked language modeling) and generative tasks like code repair, code translation, code completion, code generation, etc.
+
+For code understanding tasks, the authors provide CodeBERT \cite{feng2020codebert} as a baseline. CodeBERT is very similar to BERT \cite{devlin2018bert} and treats programming language as sequential. The model is pretrained on the CodeSearchNet dataset \cite{husain2019codesearchnet} using a masked language modeling objective like BERT and a combination of comments and code as input. It is then fine tuned on the downstream CodeXGlue tasks.
+
+For generative tasks like code generation and code completion, the authors provide CodeGPT as the baseline. CodeGPT is inspired from GPT2 \cite{radford2019better}. CodeGPT contains pre-trained monolingual models on Python and Java corpora from the CodeSearchNet dataset, which includes 1.1M Python functions and 1.6M Java methods. They provide two variants of this baseline, one trained from scratch and one using GPT2 as the starting point.
+
+For tasks which are more seq2seq in nature like code translation, the authors provide a encoder-decoder baseline with CodeBERT as the encoder and a custom transformer as the decoder.
+
+All the baselines are summarized in Figure \ref{codexgluebaselines}.
+
+\subsection{Graph Neural Networks}
+The baselines include models adapted from the NLP domain. As a result, the baselines treat code as natural language and disregards its intrinsic structure and syntactic biases. As we have seen throughout the paper, Graph Neural Networks have shown great promise in tasks related to programming languages. In section 1, we saw the latest research in representing code using graph neural networks. In the rest of the sections, we saw how GNNs and representations using GNNs are adapted to specific domains. 
+
+A lot of those techniques can be used across multiple tasks in CodeXGlue and we believe they can give consistent improvements as compared to the baselines. We will explore some ways that we envision GNNs being used across tasks in CodeXGlue.
+
+\begin{itemize}
+    \item Given the initial code, we can obtain the Abstract Syntax Tree and use the AST to generate graph representations. The AST can be passed to a GNN like GraphSage \cite{hamilton2017inductive} as done in Nbref \cite{nbref}. The AST can be converted into a graph as shown in Section 1 as well. The Node Representations can then be used as inputs to the baselines shown in Figure \ref{codexgluebaselines}.
+    \item The transformer baselines can be adapted to have a GNN layer on top of the self-attention layer. This can capture the graphical nature of code and generate better representations.
+    \item Graph representations of the entire code can be compared using vector similarity to aid in code similarity based tasks. Either the graph representations can be combined with the transformer representations or they can be used independently.
+    \item Novel ways can be researched to combine Node embeddings from GNN with text embeddings for tasks that involve a combination of text and code.
+\end{itemize}
+
+These are interesting avenues of research and we hope to explore some of them in the future. These ideas are currently based on our understanding and hence all of them may not work, but it is still interesting to explore and generate common GNN representations of code.
+
+\section{Conclusion}
+Research in Neural methods and Graph Neural Networks for Programming Languages has evolved tremendously over the past few years. We have seen the boosts in performance using GNNs in a variety of different subdomains in this paper. However, the use of GNNs in Code is still at its infancy and there is still a lot of potential and future work to be done. Cross domain adpataion and generalized representation learning of code is also gaining a lot of interest and bound to see huge progress in the coming years. We hope this survey provides the readers with a quick debriefing of the use of GNNs in different domains of Programming Languages, and guides them towards developing better techniques.
 
 \bibliography{main}
 \bibliographystyle{icml2021}
