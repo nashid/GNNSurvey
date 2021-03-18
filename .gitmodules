@@ -1,0 +1,6 @@
+[submodule "Implementation Codes/nbref"]
+	path = Implementation Codes/nbref
+	url = https://github.com/facebookresearch/nbref/
+[submodule "Implementation Codes/CodeXGLUE"]
+	path = Implementation Codes/CodeXGLUE
+	url = https://github.com/microsoft/CodeXGLUE.git
