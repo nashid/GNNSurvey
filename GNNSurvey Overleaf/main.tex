@@ -9,6 +9,8 @@
 \usepackage{booktabs} % for professional tables
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage[shortlabels]{enumitem}
 
 
@@ -83,44 +85,9 @@
 \printAffiliationsAndNotice{\icmlEqualContribution} % otherwise use the standard text.
 
 \begin{abstract}
-This document provides a basic paper template and submission guidelines.
-Abstracts must be a single paragraph, ideally between 4--6 sentences long.
-Gross violations will trigger corrections at the camera-ready phase.
+Our objective for the team project is to create a comprehensive survey paper over the usage of graph neural networks and deep learning in the domain of programming languages. The paper will be titled “GNN In Programming Language”. Till now we have seen several advancements in programming techniques which use graph neural networks to comprehend programming languages. We have also seen works being done in bug detection, similarity checking, synthesis, semantics, decompilation and translation of programs. There is also a growing interest in combining programming languages with other domains like NLP (Code x NLP). These subdomains however are in their infancy and have huge potentials for advancements. In the current state these subdomains are separate and interdomain work is limited. This leads to lack of survey papers which connect these domains and show the complete potential of using graph neural networks in the complete process of programming. This survey paper aims to diminish the separation between these subdomains by aggregating the state of the art work in these subdomains and providing background information to understand the current and potential usage of graph neural networks in programming languages. In this paper we will be focusing on the aforementioned subdomains and going in detail over the state of the art techniques in each one of them. We will also start with an overview of how to represent code using Graph Neural Networks, since this will be the parent step in most applications.
+For this project we will focus on collecting a comprehensive text on related works and background information for the first week. For the next two and a half weeks we will analyze the collected text and implement the models proposed (using the git repositories provided or following the implementation section). Finally we will accrue our analysis into a comprehensive paper along with code used for evaluation in the final one to one and half weeks.
 \end{abstract}
-
-\section{Background}
-
-\begin{figure}[ht]
-\vskip 0.2in
-\begin{center}
-\centerline{\includegraphics[width=\columnwidth]{Images/Background1.png}}
-\label{icml-historical}
-\end{center}
-\vskip -0.2in
-\end{figure}
-In this section we will be focusing on representing programs as graphs. We are using the paper \cite{allamanis2017learning} to present the current state of the art procedure to represent programs as graphs for GNN processing. The authors present how to construct graphs from source code and how to scale Gated Graph Neural Networks training to such large graphs.We do this by encoding programs as graphs, in which edges represent syntactic relationships (e.g. “token before/after”) as well as semantic relationships (“variable last used/written here”, “formal parameter for argument is called stream”, etc.). They evaluate their method on two tasks: VARNAMING, in which a network attempts to predict the name of a variable given its usage, and VARMISUSE, in which the network learns to reason about selecting the correct variable that should be used at a given program location. The VARNAMING task, in which given some source code, the “correct” variable name is inferred as a sequence of subtokens. This requires some understanding of how a variable is used, i.e., requires reasoning about lines of code far apart in the source file. The variable misuse prediction task (VARMISUSE), aims to infer which variable should be used in a program location. To illustrate the task, Figure above shows a slightly simplified snippet of a bug their model detected in a popular open-source project. The Code used for experiments are published at https://github.com/dmitrykazhdan/Representing-Programs-with-Graphs.
-
-\subsection{Formulation of task description}
-In the proposed formulation a source code file is viewed as a sequence of tokens t$_0$ . . . t$_N$ = T , in which some tokens t$_{\lambda_0}$ , t$_{\lambda_1}$ . . . are variables. Furthermore, let V$_t$ $\subset$ V refer to the set of all type-correct variables in scope at the location of t, i.e., those variables that can be used at t without raising a compiler error. They call the location t where they want to predict the correct variable usage a slot. A separate task is defined for each slot t$\lambda$: Given t$_0$ . . . t$_{\lambda-1}$ and t$_{\lambda+1}$, . . . , $\lambda_N$ , correctly select t$_\lambda$ from V$_{t_\lambda}$ . For training and evaluation purposes, a correct solution is one that simply matches the ground truth, but note that in practice, several possible assignments could be considered correct (i.e., when several variables refer to the same value in memory).
-
-\subsection{Gates Graph Neural Networks}
-A graph G = (V , E , X ) is composed of a set of nodes V, node features X, and a list of directed edge sets E = (E$_1$,...,E$_K$) where K is the number of edge types. Each v is annotated with a real-valued vector x(v) $\in$ R$^D$ representing the features of the node (e.g., the embedding of a string label of that node). Every node v is associated with a state vector h(v), initialized from the node label x(v). The sizes of the state vector and feature vector are typically the same To propagate information throughout the graph, “messages” of type k are sent from each v to its neighbors, where each message is computed from its current state vector as m$_k^{(v)}$ = f$_k$(h$^{(v)}$). Here, f$_k$ can be an arbitrary function; A linear layer is chosen in this case. By computing messages for all graph edges at the same time, all states can be updated at the same time. In particular, a  new state for a node v is computed by aggregating all incoming messages as m$_k^{(v)}$ = g({m$_k^{(u)}$ | there is an edge of type k from u to v}). g is an aggregation function, on k as element wise summation. Given the aggregated message m$^{(v)}$) and the current state vector h(v) of node v, the state of the next time step h$'^{(v)}$ is computed as h$'^{(v)}$ = GRU(m$^{(v)}$, h$^{(v)}$), where GRU is the recurrent cell function of gated recurrent unit (GRU). The dynamics defined by the above equations are repeated for a fixed number of time steps. Finally, the state vectors from the last time step are the node representation.
-
-\subsection{Program Graphs}
-The backbone of a program graph is the program’s abstract syntax tree (AST). Add NextToken edges connecting each syntax token to its successor. Let a token v, let D$^R$(v) be the set of syntax tokens at which the variable could have been used last. Similarly, let D$^W$ (v) be the set of syntax tokens at which the variable was last written to. Graph to chain all uses of the same variable using LastLexicalUse edges. Return tokens are connected to the method declaration using ReturnsTo edges. While, arguments in method calls are connected to the formal parameters that they are matched to with FormalArgName edges. The authors introduce their respective backwards edges (transposing the adjacency matrix), doubling the number of edges and edge types
-
-\subsection{Leveraging Variable Type Information}
-The authors assume that a statically typed language and that the source code can be compiled, and thus each variable has a (known) type $\tau$(v). To use it, a learnable embedding function r($\tau$) for known types and additionally define an “UNKTYPE” for all unknown/unrepresented types. Rich type hierarchy that is available in many object-oriented languages is also taken into account. They map a variable’s type $\tau$(v) to the set of its supertypes, i.e. $\tau^\ast$(v) = {$\tau$: $\tau$(v) implements type $\tau$} $\cup$ {$\tau$(v)}. Then the type representation r$^\ast$(v) of a variable v as the element-wise maximum of {r($\tau$) : $\tau$ $\in$ $\tau^\ast$(v)} is computed. the maximum is chosen as it is a natural pooling operation for representing partial ordering relations (such as type lattices). Using all types in $\tau^\ast$(v) allows us to generalize to unseen types that implement common supertypes or interface. These types implement a common interface (IList) and share common characteristics.
-
-\subsection{Initial Node Representation}
-The poposed method splits the name of a node into subtokens (e.g. classTypes will be split into two subtokens class and types) on camelCase and pascal case. Then average is taken of the embeddings of all subtokens to retrieve an embedding for the node name. Finally, the learned type representation r$^{\ast}$(v) is concatenated.
-
-\subsection{Programs Graphs for VarNaming}
-Given a program and an existing variable v, They build a program graph as discussed above and then replace the variable name in all corresponding variable tokens by a special <SLOT> token. The initial node labels computed is used as the concatenation of learnable token embeddings and type embeddings as discussed above, GGNN propagation is repeated for 8 time steps and then variable usage representation by averaging the representations for all <SLOT> tokens is computed. This representation is then used as the initial state of a one-layer GRU, which predicts the target name as a sequence of subtoken.
-
-\subsection{Programs Graphs for VarMisuse}
-To model VARMISUSE with program graphs, the graph is modified. First, to compute a context representation c(t) for a slot t where the used variable is predicted, a new node v$_{<SLOT>}$ at the position of t is inserted, corresponding to a “hole” at this point, and connection is made to the remaining graph using all applicable edges that do not depend on the chosen variable at the slot (i.e., everything but LastUse, LastWrite, and LastLexicalUse edges). Then, to compute the usage representation u(t, v) of of each candidate variable v at the target slot, a “candidate” node v$_{t,v}$ for all v in V$_t$ is inserted, and connected to the graph by inserting the LastUse, LastWrite and LastLexicalUse edges that would be used if the variable were to be used at this slot. Each of these candidate nodes represents the speculative placement of the variable within the scope.
-Using the initial node representations, concatenated with an extra bit that is set to one for the candidate nodes v$_{t,v}$ , The GGNN propagation is repeated for 8 time steps. The context and usage representation are then the final node states of the nodes, i.e., c(t) = h($^{v_{<SLOT>}}$) and u(t,v) = h$^{(v_t,v)}$. Finally, the correct variable usage at the location is computed as arg maxv c(t)$^T$ u(t, v). The model is trained using maximum likelihood.
 
 \section{Decompilation}
 \label{decompilation}
@@ -168,7 +135,7 @@ On the other hand, \citet{katz2019towards} uses the deterministic nature of the 
 
 \citet{coda} (Coda) assess the performance of their model on various synthetic benchmarks with different difficulty levels and real-world applications. Given the binary executable as the input, we use an open-source disassembler \cite{mips,redasm} for MIPS \cite{hennessy1982mips} and x86-64 \cite{guide2011intel} architecture to generate the corresponding assembly code that is fed to the model. They evaluate the performance of the Coda using two main metrics: token accuracy and program accuracy. Token accuracy is defined as the percentage of the predicted tokens in high-level Programming Language that match with the ground-truth ones. Program accuracy is defined as the ratio between the number of predicted programs with 100% token accuracy and the number of total recovered programs.
 
-\cite{nbref} uses different metrics for different stages of their model. For the source code generation stage, they use token accuracy and the graph edit distance \cite{sanfeliu1983distance} without enforcing the match between predicted and ground truth AST on graph generation. The metric is fair to evaluate decompilation tasks as we remove all the Expression collision. For the data-type solver stage, they use two metrics: (i) macro accuracy and (ii) micro accuracy.
+NBref \cite{nbref} uses different metrics for different stages of their model. For the source code generation stage, they use token accuracy and the graph edit distance \cite{sanfeliu1983distance} without enforcing the match between predicted and ground truth AST on graph generation. The metric is fair to evaluate decompilation tasks as we remove all the Expression collision. For the data-type solver stage, they use two metrics: (i) macro accuracy and (ii) micro accuracy.
 
 Often, these metrics are combined and calculated in ways that give the success rates of decompilation in percentages. The evaluation metrics and protocol seem to vary across different neural decompilation approaches. This makes consistent evaluation across different methods difficult. Since this is a fairly recent research area, a standard evaluation benchmark and metric along with the standard dataset proposed earlier will aid in moving research forward in this domain.
 
@@ -178,6 +145,23 @@ Next we will discuss the different neural decompilation approaches at a high lev
 RNNs have become very popular for sequential Machine Learning tasks like translation, question answering ,etc \cite{sutskever2014sequence}. RNNs have feedback loops which permit persistence of data which in turn allows sequential processing \cite{siegelmann1993foundations}. An unrolled recurrent neural network has a natural sequence-like structure which makes it well suited for translation tasks. There are several variations on RNNs including the LSTM \cite{hochreiter1997long} which has increasingly become the go-to RNN of choice. LSTMs help preserve long term dependencies and have shown major improvements when dealing with longer sequences. A particular variant of RNNs is the sequence to sequence model or the seq2seq, which takes in an input sequence and generates an output sequence. As you can imaging, such seq2seq models are very useful for tasks like natural language translation \cite{cho2014learning}.
 
 Decompilation can be seen as a natural expansion of the language translation task, but for programming languages. Translation for programming languages can also include translating between two high level languages like Java and Python. But decompilation deals with translation between a high level language and a low level binary executable/machine code. 
+
+\begin{figure*}[ht]
+\centering
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{Images/decompilation_katz2018.png}
+    \caption{\citet{katz2018using}'s Architecture of RNN decompilation system}
+    \label{decompilation_katz2018}
+\end{subfigure}
+\hfill
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{Images/decompilation_katz2019.png}
+    \caption{\citet{katz2019towards}'s two phase pipeline. (1) canonicalized x86 input, (2) NMT output, (3) templated output, (4) final fixed output.}
+    \label{decompilation_katz2019}
+\end{subfigure}
+\end{figure*}
 
 \citet{katz2018using} is one of the first approaches to adapt seq2seq RNN models for decompilation. Their sequence-to-sequence model is composed of two recurrent neural networks: an encoder, which processes the input sequence, and a decoder,
 which creates outputs. Further, the sequence-to-sequence model contains a hidden state, C, which summarizes the entire input sequence. The output is generated from the decoder by taking in the hidden state and the current input and yielding a probability distribution from an activation function like Softmax. To modify this model for decompilation, they make many changes in all steps of the pipeline including pre-processing, model architecture, post-processing, etc. The first step involves tokenization of the input-output pair i.e. the source-target pair of the high level code/ low level code pair. The appropriate tokenizer is chosen and built based on expert domain knowledge. The authors also use bucketing to separate out different lengths of the input sequence \cite{bucketing}. Each bucket has its own RNN comprising of the encoder and decoder. Exact details can be found in the paper. The pipeline for an input pair looks like this - 
@@ -189,7 +173,17 @@ which creates outputs. Further, the sequence-to-sequence model contains a hidden
     \item The tokens for the high level code are retrieved and combined from that dictionary.
 \end{itemize}
 
-This approach does not take into consideration the differences between natural languages and programming languages, thus leading to ineffective results. For example, as \citet{katz2019towards} point out, the code they generate often cannot be compiled or is not equivalent to the original source code. This approach did however show the possibility of NMT for decompilation, and served as a stepping stone for the next approach proposed by \citet{katz2019towards}. 
+This approach is summarized in Fig. \ref{decompilation_katz2018}. It does not take into consideration the differences between natural languages and programming languages, thus leading to ineffective results. For example, as \citet{katz2019towards} point out, the code they generate often cannot be compiled or is not equivalent to the original source code. This approach did however show the possibility of NMT for decompilation, and served as a stepping stone for the next approach proposed by \citet{katz2019towards}. 
+
+\begin{figure*}[ht]
+\vskip 0.2in
+\begin{center}
+\centerline{\includegraphics[width=\textwidth]{Images/decompilation_coda.png}}
+\caption{\citet{coda}. Coda's end to end pipeline}
+\label{decompilation_coda}
+\end{center}
+\vskip -0.2in
+\end{figure*}
 
 \citet{katz2019towards} combines Neural Machine Translation (NMT) and Program analysis to improve the performance of their Neural Decompilation model and make it more practically useful and viable. They also propose a framework called TraFix that can automatically learn a decompiler from a compiler and check the correctness of the decompiler using a verifier. Their approach consists of two complimentary phases:
 \begin{itemize}
@@ -197,7 +191,7 @@ This approach does not take into consideration the differences between natural l
 the input. The input is the low level binary code.
     \item Filling the template with values and constants that result in code equivalent to the input. This means that the output from running the executable will be the same for both cases.
 \end{itemize}
-They use a NMT model combined with a feedback loop which facilitates active learning based on the outputs of phase 1. Phase 1 results are compared to the computation structure of the input. If they match, the generated code moves to phase 2. If not, the dataset is updated and the model is trained again. The authors use LSTMs for their NMT model.
+They use a NMT model combined with a feedback loop which facilitates active learning based on the outputs of phase 1. Phase 1 results are compared to the computation structure of the input. If they match, the generated code moves to phase 2. If not, the dataset is updated and the model is trained again. The authors use LSTMs for their NMT model. The two phased pipeline is summarized in Fig. \ref{decompilation_katz2019}.
 
 NMT based techniques are still primarily sequential and fail to incorporate the graph and tree structures of code like control flow graphs and abstract syntax trees. We will take a look at some newer methods which try to incorporate these properties.
 
@@ -206,7 +200,7 @@ Coda \cite{coda} also uses a two phase learning approach and an NMT model at its
 \begin{itemize}
     \item It uses an instruction type-aware encoder and a abstract syntax tree (AST) decoder
 for translating the input binary into the target PL. Their encoder deploys separate RNNs for different
-types of statements, thus the statement boundaries are preserved (This is different from bucketing used by \citet{katz2019towards}. Furthermore, the control and data dependency in the input program are translated to the connections between the hidden states of corresponding RNNs. The output from the AST decoder maintains the dependency constraints and statement boundaries using terminal nodes, which facilitates learning the grammar of the target PL.
+types of statements, thus the statement boundaries are preserved (This is different from bucketing used by \citet{katz2019towards}). Furthermore, the control and data dependency in the input program are translated to the connections between the hidden states of corresponding RNNs. The output from the AST decoder maintains the dependency constraints and statement boundaries using terminal nodes, which facilitates learning the grammar of the target PL.
     
     \item In this stage, Coda employs an RNN-based error predictor (EP) to identify potential
 prediction mistakes in the output program from Phase 1. Ensembling method can be used to boost
@@ -215,8 +209,9 @@ program. Unlike traditional decompilers which utilize only the syntax informatio
 Coda leverages the Levenshtein edit distance (LD) between the compilation of the updated output
 program and the ground-truth low-level code to prevent false alarms induced by the EP. This can be considered conceptually similar to phase 2 of \citet{katz2019towards}.
 
-They also employ a technique called Attention Feeding to combine different contexts in the AST decoder. This can be considered similar to message passing in graphs, since trees are a form of graph. The Attention Feeding is comprised of parent attention feeding and input instruction attention feeding. Parent feeding refers to context from the parent of the current node, and input feeding refers to context from the current node's corresponding node in the input.
 \end{itemize}
+
+Coda's two phase approach is summarized in Figure. \ref{decompilation_coda}. Additionally, they also employ a technique called Attention Feeding to combine different contexts in the AST decoder. This can be considered similar to message passing in graphs, since trees are a form of graph. The Attention Feeding is comprised of parent attention feeding and input instruction attention feeding. Parent feeding refers to context from the parent of the current node, and input feeding refers to context from the current node's corresponding node in the input. 
 
 \subsection{Bringing Graph Neural Networks into the picture}
 Even after incorporating AST structure, the base models of the previous approach are still derived from natural language based seq2seq models. This disregards the intrinsic structure of code (graphs/trees). To the best of our knowledge, \cite{nbref} is the first Neural Decompilation approach which utilizes Graph Neural Networks (GNNs) to represent code in the context of decompilation. They use a backbone structural transformer \cite{vaswani2017attention} with inductive Graph Neural Networks \cite{hamilton2017inductive} to represent the low-level code (LLC) as control/dataflow dependency graphs and source code as Abstract Syntax Tree (AST).
@@ -224,10 +219,42 @@ Even after incorporating AST structure, the base models of the previous approach
 Their pipeline also involves a two step approach - data type solver (DT-Solver) and source code generator (SC-Gen). The output of the data type solver is used as the decoder input of the source
 code generation. Both use the same backbone with GNNs.
 
+\begin{figure*}[ht]
+\centering
+\begin{subfigure}{\textwidth}
+   \centerline{\includegraphics[width=\textwidth]{Images/decompilation_nbref.png}}
+    \caption{NBref's \cite{nbref} backbone neural architecture design.}
+    \label{decompilation_nbref} 
+\end{subfigure}
+\hfill
+\begin{subfigure}{\textwidth}
+   \centerline{\includegraphics[width=\textwidth]{Images/nbref_results.png}}
+    \caption{NBref's \cite{nbref} results compared to baselines and Coda (Ins2AST + attn).}
+    \label{nbref_results} 
+\end{subfigure}
+\end{figure*}
+
+\begin{table*}[ht]
+\caption{Comparison of different Neural Decompilation Techniques}
+\label{decompilation_comparison}
+\vskip 0.15in
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\toprule
+Name & Citation & Year & Phases & Model Architecture & Model Layer & GNNs? \\
+\midrule
+\citet{katz2018using} RNN   & \cite{katz2018using}& 2018 & 1 & Encoder-Decoder & RNN & No\\
+TraFix   & \cite{katz2019towards}& 2019 & 2 & Encoder-Decoder & RNN & No\\
+Coda  & \cite{coda}& 2019 & 2 & Encoder-Decoder & Attention + LSTM & No\\
+NBref  & \cite{nbref}& 2021 & 2 & Transformer & Self-Attention + GNN & Yes\\
+\bottomrule
+\end{tabular}
+\end{center}
+\vskip -0.1in
+\end{table*}
+
 \textbf{Structural Transformer with GNNs}
 The backbone structural transformer has three components: (1) LLC encoder, (2) AST encoder, and (3) AST decoder. The LLC encoder takes the low-level instructions converted from binaries using disassembler as input. AST encoder takes the input of a previous (partial) AST, and the predictions of AST decoder are AST nodes, which can be equivalently converted to the high-level program. Here we will focus on the encoders and how they use GNNs. The GNN of choice in this paper is GraphSAGE (\citet{hamilton2017inductive}). GNNs are used in two places - 1) To embed the initial code/AST structure 2) To augment the Attention Layers in the Transformer
-
-
 
 \textbf{Initial GNN embeddings}
 The LLC encoder converts the initial low level code into a graph where each node is representated by its feature vector including features like register / instruction type ($var_t$
@@ -240,11 +267,29 @@ tree expansions. They treat the AST tree as a graph (V) and embed it using Graph
 \textbf{GNN Augmentation for Attention}
 The output of the attention layers is converted to a graph using the same edge rules in the LLC encoder and those states are then fed again into the GNN to obtain embeddings that incorporate the inductive biases of GNNs.
 
-Experiments show that Nbref outperforms the corresponding transformer baseline and previous Neural Decompilers like Coda \cite{coda}. It also outperforms other models on human written Leetcode solutions. The performance gain over baseline Transformer clearly shows the value of using GNNs. Since most state of the art NMT models use transformers now, performance gains over previous Neural Decompilers using RNNs is expected. 
+The neural architecture along with the GNN layers are visualized in Figure. \ref{decompilation_nbref}. Experiments show that Nbref outperforms the corresponding transformer baseline and previous Neural Decompilers like Coda \cite{coda}. It also outperforms other models on human written Leetcode solutions. The performance numbers are visible in Figure \ref{nbref_results}. The performance gain over baseline Transformer clearly shows the value of using GNNs. Since most state of the art NMT models use transformers now, performance gains over previous Neural Decompilers using RNNs is expected. 
 
 Critics for Nbref have mentioned that they do not propose anything novel, but the use of GNN based representations in Neural Decompilation is definitely the first we have come across. GNNs to represent code is a natural choice in many domains related to programming languages because of the graph and tree based structure of code. We believe future research will definitely involve the use of GNNs for learning representations of code. The way this is done might be tailored differently for decompilation to improve performance and efficiency. Once again, a common dataset and benchmark may help accelerate research in Neural Decompilation. 
 
+\subsection{Comparison}
+Table \ref{decompilation_comparison} compares the relevant Neural Decompilation Approaches over the last few years. As we can see, only recently have GNNs been used in Neural decompilation. However, using GNNs has directly contributed to considerable improvements in performance as can be seen from Figure \ref{nbref_results}. We expect the use of GNNs to become mainstream in Neural Decompilation in the coming years.
+
+\begin{figure*}[ht]
+\centering
+\centerline{\includegraphics[width=\textwidth]{Images/codexgluetasks.jpeg}}
+\caption{\citet{lu2021codexglue}. CodeXGlue's tasks}
+\label{codexgluetasks}
+\end{figure*}
+
 \section{CodeXGlue}
+
+\begin{figure*}[ht]
+    \centering
+    \centerline{\includegraphics[width=\textwidth]{Images/codexgluebaselines.png}}
+    \caption{\citet{lu2021codexglue}. CodeXGlue's baseline architectures}
+    \label{codexgluebaselines}
+\end{figure*}
+
 Benchmarks in Natural Language Processing have played an important role in the progress of the field. Particularly, GLUE \cite{wang2018glue} is a comprehensive benchmark for training, evaluating and analyzing natural language understanding systems. It includes 9 tasks with corresponding datasets and evaluation guidelines, a diagnostic dataset to analyze NLP systems and a public leaderboard to track progress in the field. As expected, Deep Learning systems have dominated the benchmark and even surpassed human performance. As a result of this, SuperGLUE \cite{wang2019superglue} has been released as a continuation of GLUE with harder challenges in order to further progress the field.
 
 Benchmarks provide a unified and system agnostic way for several different researchers to compare their approaches on a common ground. Most NLP papers dealing with finetuning language models will mention GLUE or SuperGLUE, and publish their results to the public leaderboard \footnote{https://gluebenchmark.com/leaderboard}. Looking at the incredible success of such benchmarks in NLP warrants a similar benchmark in applying Machine Learning to the domain of Programming Languages and Code. That is precisely what the recently released CodeXGlue (\citet{lu2021codexglue}) aims to achieve. Similar to GLUE, CodeXGlue contains a bunch of tasks paired with their corresponding processed datasets and a public leaderboard. The leaderboard can be found at \url{https://microsoft.github.io/CodeXGLUE/} and the github repo is at \url{https://github.com/microsoft/CodeXGLUE}.
@@ -260,7 +305,7 @@ CodeXGlue includes 14 datasets for 10 diversified code intelligence tasks coveri
     \item text-text (documentation translation)
 \end{itemize}
 
-The tasks can be summarized in Fig. ....... which is taken from their github repo. The last category of tasks \textit{text-text} leans more towards NLP but the rest contain code as their prime or major component. With code comes the intrinsic structure of programming languages including trees and graphs, and this varies greatly from natural languages. Therefore, we believe the inductive biases of Graph Neural Networks are very well suited to represent the code aspect in these tasks. Since this is a fairly recent benchmark, the leaderboard mostly contains baselines as of now. Most of the baselines mentioned in the CodeXGlue paper and papers like CodeBERT \cite{feng2020codebert} use transformer models which are directly adapted from their NLP counterparts. Hence, there is plenty of room for innovation and climbing the leaderboard on this benchmark. We will briefly cover the baselines and then see how Graph Neural Networks can be used to bolster these deep learning models.
+The tasks can be summarized in Figure \ref{codexgluetasks} which is taken from their github repo. The last category of tasks \textit{text-text} leans more towards NLP but the rest contain code as their prime or major component. With code comes the intrinsic structure of programming languages including trees and graphs, and this varies greatly from natural languages. Therefore, we believe the inductive biases of Graph Neural Networks are very well suited to represent the code aspect in these tasks. Since this is a fairly recent benchmark, the leaderboard mostly contains baselines as of now. Most of the baselines mentioned in the CodeXGlue paper and papers like CodeBERT \cite{feng2020codebert} use transformer models which are directly adapted from their NLP counterparts. Hence, there is plenty of room for innovation and climbing the leaderboard on this benchmark. We will briefly cover the baselines and then see how Graph Neural Networks can be used to bolster these deep learning models.
 
 \subsection{Baselines}
 The baselines use different variants of Transformers as their backbone. The tasks can be approximately classified into understanding tasks like code search, code clone detection, defect detection, cloze test (similar to masked language modeling) and generative tasks like code repair, code translation, code completion, code generation, etc.
@@ -271,8 +316,10 @@ For generative tasks like code generation and code completion, the authors provi
 
 For tasks which are more seq2seq in nature like code translation, the authors provide a encoder-decoder baseline with CodeBERT as the encoder and a custom transformer as the decoder.
 
+All the baselines are summarized in Figure \ref{codexgluebaselines}.
+
 \subsection{Graph Neural Networks}
-The baselines include models adapted from the NLP domain. As a result, the baselines treat code as natural language and disregards its intrinsic structure and syntactic biases. As we have seen throughout the paper, Graph Neural Networks have shown great promise in tasks related to programming languages. In section 1....... we saw the latest research in representing code using graph neural networks. In the rest of the sections, we saw how GNNs and representations using GNNs are adapted to specific domains. 
+The baselines include models adapted from the NLP domain. As a result, the baselines treat code as natural language and disregards its intrinsic structure and syntactic biases. As we have seen throughout the paper, Graph Neural Networks have shown great promise in tasks related to programming languages. In section 1, we saw the latest research in representing code using graph neural networks. In the rest of the sections, we saw how GNNs and representations using GNNs are adapted to specific domains. 
 
 A lot of those techniques can be used across multiple tasks in CodeXGlue and we believe they can give consistent improvements as compared to the baselines. We will explore some ways that we envision GNNs being used across tasks in CodeXGlue.
 
@@ -289,7 +336,7 @@ Additionally, domain specific relational graphs, expert knowledge and reasoning 
 SimGNN \cite{bai2019simgnn} proposes
 \begin{enumerate}
     \item Designing a learnable embedding function that maps every graph to an embedding vector.\\
-        A Novel attention mechanism is utilized subject to a specific similarity metric
+        A novel attention mechanism is utilized subject to a specific similarity metric
     \item Design a pairwise node comparison method to supplement the graph-level embeddings with find-grained node-level information
 \end{enumerate}
 Approach to speed-up graph-similarity computation by finding approximate values heuristically via a learnable mapping function. Resultant process is quadratic with respect to graph size, which is still among the most efficient methods for graph similarity computation.\\
@@ -343,8 +390,15 @@ Neighbor state aggregation: $m_i^{(t)} = \sum\limits_{j \in N_i} A_{ij} \cdot h_
 Program graph construction consists of the construction of the AST, Function Call Graph (FCG), and Data Flow Graph (DFG).
 AST is as described in preceding sections. Each node in FCG represents a function, while each edge denotes a function-call relation between two functions.
 A node in DFG can be an entity, such as a variable, operator, structure identifier, etc., while an edge represents the data transfer between two entities.
-\centerline{\includegraphics[width=\columnwidth]{Images/Similarity2-5a.png}}
-\centerline{\includegraphics[width=\columnwidth]{Images/Similarity2-5b.png}}
+\begin{figure}[ht]
+    \centerline{\includegraphics[width=\columnwidth]{Images/Similarity2-5a.png}}
+    \caption{FCG example}
+\end{figure}
+\begin{figure}[ht]
+    \centerline{\includegraphics[width=\columnwidth]{Images/Similarity2-5b.png}}
+    \caption{DFG example}
+\end{figure}
+
 It is desireable to integrate these representations into a new program graph that encapsulates their joint information: called the integrated FDA graph.
 \centerline{\includegraphics[width=\columnwidth]{Images/Similarity2-6.png}}
 In summary, the node information aggregation is as follows:
@@ -358,7 +412,11 @@ $h_G = softmax(\sum\limits_{i \in V}f(h_i^{(T)}, x_i) \odot g(h_i^{(T)}))$
 Experiments were conducted on the Online Judge (OJ) programming source code files in C++, to be evaluated on classification accuracy, semantic analysis of learned representation, and attention analysis.
 \centerline{\includegraphics[width=\columnwidth]{Images/Similarity2-7.png}}
 Node representations similarity was evaluated using K-means to see if similar nodes clustered into meaningful groups.
-\centerline{\includegraphics[width=\columnwidth]{Images/Similarity2-8.png}}
+\begin{figure}[ht]
+    \centerline{\includegraphics[width=\columnwidth]{Images/Similarity2-8.png}}
+    \caption{Attention scores of nodes when merged to graph representation}
+\end{figure}
+
 The attention mechanism was visualized via a heat map of the node attentions when aggregated to entire graph representations.
 \centerline{\includegraphics[width=\columnwidth]{Images/Similarity2-9.png}}
 
@@ -401,18 +459,22 @@ The matching network has the ability to adjust its graph representations based o
 \subsubsection{Learning}
 If similarity learning model is trained pairwise, samples must be labeled as similar and dissimilar, whereas triple training needs only relative similarity between the three samples.
 Loss functions are defined respectively:
-$L_{pair} = \mathbb{E}_{(G_1, G_2, t)}[max{0.\gamma-t(1-d(G_1,G_2))}]\\
- L_{triplet} = \mathbb{E}_{(G_1, G_2, G_3)}[ma{0,d(G_1,G_2)-d(G_1,G_3) + \gamma}]$
+$L_{pair} = \mathbb{E}_{(G_1, G_2, t)}[max\{0,\gamma-t(1-d(G_1,G_2))\}]\\
+ L_{triplet} = \mathbb{E}_{(G_1, G_2, G_3)}[max\{0,d(G_1,G_2)-d(G_1,G_3) + \gamma\}]$
 where $t$ is a binary similarity label.
 \subsubsection{Evaluation}
-Overall results demonstrate that GMns excel on graph similarity learning and consistently outperform other approaches, shown here is the binary function similarity search.
+Overall results demonstrate that GMNs excel on graph similarity learning and consistently outperform other approaches, shown here is the binary function similarity search.
 The model was evaluated on data generated by compiling an open source vido processing software \texttt{ffmpeg} using different compilers \texttt{gcc} and \texttt{clang} with various configurations.
 \centerline{\includegraphics[width=\columnwidth]{Images/Similarity3-1.png}}
 
 \subsection{Neural Code Comprehension \cite{ben2018neural}}
 \subsubsection{Introduction}
 A novel processing technique to learn code semantics, and apply it to a variety of program analysis tasks – based on an Intermediate Representation (IR), leveraging underlying data- and control-flow of programs.\\
-\centerline{\includegraphics[width=\columnwidth]{Images/Similarity4-1.png}}
+\begin{figure}[ht]
+    \centerline{\includegraphics[width=\columnwidth]{Images/Similarity4-1.png}}
+    \caption{Component overview of Neural Code Comprehension pipeline}
+\end{figure}
+
 \textit{Naturalness Hypothesis: } Software is a form of human communication; software corpora have similar statistical properties to natural language corpora; and these properties can be exploited to build better software engineering tools
 This work's contributions are as follows:
 \begin{itemize}
@@ -434,7 +496,11 @@ XFGs are directed multigraphs that provide a notion of context, where nodes (var
             \item Identifiers without a dataflow parent are connected to their root (label or program root)
         \end{enumerate}
 \end{enumerate}
-\centerline{\includegraphics[width=\columnwidth]{Images/Similarity4-2.png}}
+\begin{figure}[ht]
+    \centerline{\includegraphics[width=\columnwidth]{Images/Similarity4-2.png}}
+    \caption{Contextual flow processing scheme}
+\end{figure}
+
 \subsubsection{inst2vec: Embedding Statements in Continuous Space}
 Desiderata for an embedding space include: (a) statements that are in close proximity should have similar artifacts on a system (i.e. use the same resources); and (b) changing the same attributes (e.g. data type) for different instructions should result in a similar offset in the space.
 \centerline{\includegraphics[width=\columnwidth]{Images/Similarity4-3.png}}
@@ -442,9 +508,17 @@ Desiderata for an embedding space include: (a) statements that are in close prox
 Pairs are obtained by constructing a dual graph in which statements are nodes, omitting duplicate edges.
 \centerline{\includegraphics[width=\columnwidth]{Images/Similarity4-4.png}}
 \subsubsection{Evaluation}
-\centerline{\includegraphics[width=\columnwidth]{Images/Similarity4-5.png}}
+\begin{figure}[ht]
+    \centerline{\includegraphics[width=\columnwidth]{Images/Similarity4-5.png}}
+    \caption{t-SNE plots for learned embeddings}
+\end{figure}
+
 Using \texttt{inst2vec} an RNN was constructed that reads source code and outputs a predicted program class on the POJ-104 dataset, collected from the Pedagogical Open Judge System.
-\centerline{\includegraphics[width=\columnwidth]{Images/Similarity4-6.png}}
+\begin{figure}[ht]
+    \centerline{\includegraphics[width=\columnwidth]{Images/Similarity4-6.png}}
+    \caption{Algorithm classfication test accuracy}
+\end{figure}
+
 
 \section{Program synthesis}
 \subsection{Introduction}
@@ -820,9 +894,10 @@ This leads to the following table and graphs for results.
 \end{figure}
 
 
+
+
 \bibliography{main}
 \bibliographystyle{icml2021}
-
 
 \end{document}
 
